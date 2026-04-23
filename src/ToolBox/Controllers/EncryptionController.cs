@@ -127,12 +127,11 @@ public class EncryptionController : ControllerBase
         return DataReply.Succeed(Encoding.UTF8.GetString(decrypted));
     }
 
-    [HttpPost("rsa/convert-xml")]
+    [HttpPost("rsa/convert-to-xml")]
     public DataReply<string> RsaConvertToXml([FromBody] RsaConvertXmlRequest request)
     {
         if (request.Pem.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var password = string.IsNullOrEmpty(request.Password) ? null : Encoding.UTF8.GetBytes(request.Password);
-        var xml = RsaXmlHelper.ConvertPemToXml(request.Pem, request.IncludePrivateParameters, password);
+        var xml = RsaXmlHelper.ConvertPemToXml(request.Pem, request.IncludePrivateParameters);
         return DataReply.Succeed(xml);
     }
 
@@ -140,8 +139,7 @@ public class EncryptionController : ControllerBase
     public DataReply<string> RsaConvertFromXml([FromBody] RsaConvertFromXmlRequest request)
     {
         if (request.Xml.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入XML密钥");
-        var password = string.IsNullOrEmpty(request.Password) ? null : Encoding.UTF8.GetBytes(request.Password);
-        var pem = RsaXmlHelper.ConvertXmlToPem(request.Xml, request.TargetFormat, password, request.EncryptAlgorithm);
+        var pem = RsaXmlHelper.ConvertXmlToPem(request.Xml, request.TargetFormat, request.EncryptAlgorithm);
         return DataReply.Succeed(pem);
     }
 
@@ -288,8 +286,8 @@ public class RsaDecryptRequest { public string PrivateKey { get; set; } = ""; pu
 public class SymmetricEncryptRequest { public string Plaintext { get; set; } = ""; public string Key { get; set; } = ""; public string? Iv { get; set; } }
 public class SymmetricDecryptRequest { public string Ciphertext { get; set; } = ""; public string Key { get; set; } = ""; public string? Iv { get; set; } }
 
-public class RsaConvertXmlRequest { public string Pem { get; set; } = ""; public bool IncludePrivateParameters { get; set; } = false; public string? Password { get; set; } }
-public class RsaConvertFromXmlRequest { public string Xml { get; set; } = ""; public SharpDevLib.PemType TargetFormat { get; set; } = SharpDevLib.PemType.Pkcs8PrivateKey; public string? Password { get; set; } public string EncryptAlgorithm { get; set; } = "AES-256-CBC"; }
+public class RsaConvertXmlRequest { public string Pem { get; set; } = ""; public bool IncludePrivateParameters { get; set; } = false; }
+public class RsaConvertFromXmlRequest { public string Xml { get; set; } = ""; public SharpDevLib.PemType TargetFormat { get; set; } = SharpDevLib.PemType.Pkcs8PrivateKey; public string EncryptAlgorithm { get; set; } = "AES-256-CBC"; }
 public class RsaAddPasswordRequest { public string Pem { get; set; } = ""; public string Password { get; set; } = ""; public SharpDevLib.PemType TargetEncryptedType { get; set; } = SharpDevLib.PemType.EncryptedPkcs8PrivateKey; public string Algorithm { get; set; } = "AES-256-CBC"; }
 public class RsaRemovePasswordRequest { public string EncryptedPem { get; set; } = ""; public string Password { get; set; } = ""; }
 public class RsaEncryptEnhancedRequest { public string PublicKey { get; set; } = ""; public string Plaintext { get; set; } = ""; public string Padding { get; set; } = "OAEP-SHA256"; }

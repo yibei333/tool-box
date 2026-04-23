@@ -70,11 +70,11 @@ public static class RsaXmlHelper
     /// <param name="encryptAlgorithm">加密算法（仅当目标格式为受密码保护的PKCS#1私钥时适用），支持的算法：AES-256-CBC, DES-EDE3-CBC</param>
     /// <returns>PEM格式的密钥字符串</returns>
     /// <exception cref="NotSupportedException">当targetType不受支持时引发</exception>
-    public static string ConvertXmlToPem(string xml, SharpDevLib.PemType targetType, byte[]? password = null, string encryptAlgorithm = "AES-256-CBC")
+    public static string ConvertXmlToPem(string xml, SharpDevLib.PemType targetType, string encryptAlgorithm = "AES-256-CBC")
     {
         using var rsa = RSA.Create();
         FromXmlString(rsa, xml);
 
-        return rsa.ExportPem(targetType, password, encryptAlgorithm);
+        return rsa.ExportPem(targetType, null, encryptAlgorithm);
     }
 }

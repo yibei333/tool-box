@@ -36,7 +36,7 @@ const EncryptionView = {
                         </select>
                         <Button @click="rsaGenerate" variant="primary" size="sm">生成密钥对</Button>
                     </div>
-                    <div class="flex gap-2 min-h-150">
+                    <div class="flex gap-2 min-h-100">
                         <div class="flex-1 flex flex-col space-y-2">
                             <div class="flex items-center gap-2">
                                 <label class="block text-sm font-medium text-gray-700">私钥</label>
@@ -57,7 +57,7 @@ const EncryptionView = {
                 </div>
 
                 <!-- RSA Compare -->
-                <div v-if="rsaTab === 'compare'" class="flex flex-col space-y-4 min-h-150">
+                <div v-if="rsaTab === 'compare'" class="flex flex-col space-y-4 min-h-100">
                     <div class="flex-1 flex gap-4">
                         <div class="flex-1 flex flex-col">
                             <label class="block text-sm font-medium text-gray-700 mb-1">私钥</label>
@@ -82,7 +82,7 @@ const EncryptionView = {
 
                 <!-- RSA Convert PEM -->
                 <div v-if="rsaTab === 'convert'">
-                    <div class="flex flex-col gap-4 min-h-150">
+                    <div class="flex flex-col gap-4 min-h-100">
                         <div class="flex-1 flex flex-row gap-4">
                             <div class="flex-1 flex flex-col space-y-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">PEM密钥</label>
@@ -111,60 +111,6 @@ const EncryptionView = {
                     </div>
                 </div>
 
-                <!-- RSA Encrypt -->
-                <div v-if="rsaTab === 'encrypt'">
-                    <div class="grid grid-cols-2 gap-6 min-h-150">
-                        <div class="flex flex-col space-y-4 gap-4">
-                            <div class="flex-1 flex flex-col">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">公钥</label>
-                                <textarea v-model="rsaEncPublic" rows="4" placeholder="粘贴PEM公钥..."
-                                    class="w-full flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
-                            </div>
-                            <div class="flex-1">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">明文</label>
-                                <textarea v-model="rsaPlaintext" rows="8" placeholder="输入明文..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
-                            </div>
-                            <Button @click="rsaEncrypt" variant="primary" size="sm">加密</Button>
-                        </div>
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex items-center justify-between">
-                                <label class="block text-sm font-medium text-gray-700">密文(Base64)</label>
-                                <CopyButton v-if="rsaCiphertext" :text="rsaCiphertext"></CopyButton>
-                            </div>
-                            <textarea v-model="rsaCiphertext" rows="14" readonly placeholder="加密结果..."
-                                class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RSA Decrypt -->
-                <div v-if="rsaTab === 'decrypt'">
-                    <div class="grid grid-cols-2 gap-6 min-h-150">
-                        <div class="flex flex-col space-y-4 gap-4">
-                            <div class="flex-1 flex flex-col">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">私钥</label>
-                                <textarea v-model="rsaDecPrivate" rows="4" placeholder="粘贴PEM私钥..."
-                                    class="w-full flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
-                            </div>
-                            <div class="flex-1">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">密文(Base64)</label>
-                                <textarea v-model="rsaDecCiphertext" rows="8" placeholder="粘贴Base64密文..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
-                            </div>
-                            <Button @click="rsaDecrypt" variant="primary" size="sm">解密</Button>
-                        </div>
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex items-center justify-between">
-                                <label class="block text-sm font-medium text-gray-700">明文</label>
-                                <CopyButton v-if="rsaDecResult" :text="rsaDecResult"></CopyButton>
-                            </div>
-                            <textarea v-model="rsaDecResult" rows="14" readonly placeholder="解密结果..."
-                                class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- RSA XML Convert -->
                 <div v-if="rsaTab === 'xml-convert'" class="space-y-6">
                     <div class="flex space-x-2 mb-4 border-b border-gray-100 pb-2">
@@ -174,7 +120,7 @@ const EncryptionView = {
 
                     <!-- PEM to XML -->
                     <div v-if="xmlConvertDirection === 'pem-to-xml'" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-6 min-h-150">
+                        <div class="grid grid-cols-2 gap-6 min-h-100">
                             <div class="flex flex-col space-y-4 gap-4">
                                 <div class="flex-1 flex flex-col">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">PEM密钥</label>
@@ -187,11 +133,6 @@ const EncryptionView = {
                                         <span class="text-sm text-gray-700">包含私钥参数</span>
                                     </label>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">密码（可选）</label>
-                                    <input type="text" v-model="rsaXmlPassword" placeholder="密钥密码"
-                                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
-                                </div>
                                 <Button @click="rsaConvertToXml" variant="primary" size="sm">转换为XML</Button>
                             </div>
                             <div class="flex flex-col space-y-2">
@@ -200,14 +141,14 @@ const EncryptionView = {
                                     <CopyButton v-if="rsaXmlResult" :text="rsaXmlResult"></CopyButton>
                                 </div>
                                 <textarea v-model="rsaXmlResult" rows="14" readonly placeholder="XML结果..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                             </div>
                         </div>
                     </div>
 
                     <!-- XML to PEM -->
                     <div v-if="xmlConvertDirection === 'xml-to-pem'" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-6 min-h-150">
+                        <div class="grid grid-cols-2 gap-6 min-h-100">
                             <div class="flex flex-col space-y-4 gap-4">
                                 <div class="flex-1 flex flex-col">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">XML密钥</label>
@@ -221,11 +162,6 @@ const EncryptionView = {
                                         <option value="pkcs8">PKCS#8</option>
                                         <option value="public">公钥(X.509)</option>
                                     </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">密码（可选）</label>
-                                    <input type="text" v-model="rsaXmlPassword" placeholder="密钥密码"
-                                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">加密算法</label>
@@ -243,7 +179,7 @@ const EncryptionView = {
                                     <CopyButton v-if="rsaXmlFromXmlResult" :text="rsaXmlFromXmlResult"></CopyButton>
                                 </div>
                                 <textarea v-model="rsaXmlFromXmlResult" rows="14" readonly placeholder="PEM结果..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                             </div>
                         </div>
                     </div>
@@ -258,7 +194,7 @@ const EncryptionView = {
 
                     <!-- Add Password -->
                     <div v-if="passwordOperation === 'add'" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-6 min-h-150">
+                        <div class="grid grid-cols-2 gap-6 min-h-100">
                             <div class="flex flex-col space-y-4 gap-4">
                                 <div class="flex-1 flex flex-col">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">PEM密钥</label>
@@ -293,14 +229,14 @@ const EncryptionView = {
                                     <CopyButton v-if="rsaPasswordResult" :text="rsaPasswordResult"></CopyButton>
                                 </div>
                                 <textarea v-model="rsaPasswordResult" rows="14" readonly placeholder="加密后的密钥..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                             </div>
                         </div>
                     </div>
 
                     <!-- Remove Password -->
                     <div v-if="passwordOperation === 'remove'" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-6 min-h-150">
+                        <div class="grid grid-cols-2 gap-6 min-h-100">
                             <div class="flex flex-col space-y-4 gap-4">
                                 <div class="flex-1 flex flex-col">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">加密的PEM密钥</label>
@@ -309,10 +245,10 @@ const EncryptionView = {
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
-                                    <input type="text" v-model="rsaRemovePassword" placeholder="输入密码"
+                                    <input type="text" v-model="rsaRemovePwd" placeholder="输入密码"
                                         class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
                                 </div>
-                                <Button @click="rsaRemovePassword" variant="primary" size="sm">移除密码</Button>
+                                <Button @click="rsaDoRemovePassword" variant="primary" size="sm">移除密码</Button>
                             </div>
                             <div class="flex flex-col space-y-2">
                                 <div class="flex items-center justify-between">
@@ -320,7 +256,7 @@ const EncryptionView = {
                                     <CopyButton v-if="rsaRemoveResult" :text="rsaRemoveResult"></CopyButton>
                                 </div>
                                 <textarea v-model="rsaRemoveResult" rows="14" readonly placeholder="解密后的密钥..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                             </div>
                         </div>
                     </div>
@@ -328,7 +264,7 @@ const EncryptionView = {
 
                 <!-- RSA Enhanced Encrypt -->
                 <div v-if="rsaTab === 'encrypt-enhanced'">
-                    <div class="grid grid-cols-2 gap-6 min-h-150">
+                    <div class="grid grid-cols-2 gap-6 min-h-100">
                         <div class="flex flex-col space-y-4 gap-4">
                             <div class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">公钥</label>
@@ -338,7 +274,7 @@ const EncryptionView = {
                             <div class="flex-1">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">明文</label>
                                 <textarea v-model="rsaEncEnhancedPlaintext" rows="8" placeholder="输入明文..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">填充模式</label>
@@ -358,14 +294,14 @@ const EncryptionView = {
                                 <CopyButton v-if="rsaEncEnhancedResult" :text="rsaEncEnhancedResult"></CopyButton>
                             </div>
                             <textarea v-model="rsaEncEnhancedResult" rows="14" readonly placeholder="加密结果..."
-                                class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- RSA Enhanced Decrypt -->
                 <div v-if="rsaTab === 'decrypt-enhanced'">
-                    <div class="grid grid-cols-2 gap-6 min-h-150">
+                    <div class="grid grid-cols-2 gap-6 min-h-100">
                         <div class="flex flex-col space-y-4 gap-4">
                             <div class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">私钥</label>
@@ -374,8 +310,8 @@ const EncryptionView = {
                             </div>
                             <div class="flex-1">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">密文(Base64)</label>
-                                <textarea v-model="rsaDecEnhancedCiphertext" rows="8" placeholder="粘贴Base64密文..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                                <textarea v-model="rsaDecEnhancedCiphertext" rows="4" placeholder="粘贴Base64密文..."
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">填充模式</label>
@@ -400,24 +336,24 @@ const EncryptionView = {
                                 <CopyButton v-if="rsaDecEnhancedResult" :text="rsaDecEnhancedResult"></CopyButton>
                             </div>
                             <textarea v-model="rsaDecEnhancedResult" rows="14" readonly placeholder="解密结果..."
-                                class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- RSA Sign -->
                 <div v-if="rsaTab === 'sign'">
-                    <div class="grid grid-cols-2 gap-6 min-h-150">
-                        <div class="flex flex-col space-y-4 gap-4">
+                    <div class="grid grid-cols-2 gap-2 min-h-100">
+                        <div class="flex flex-col gap-4">
                             <div class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">私钥</label>
-                                <textarea v-model="rsaSignPrivate" rows="4" placeholder="粘贴PEM私钥..."
+                                <textarea v-model="rsaSignPrivate" rows="3" placeholder="粘贴PEM私钥..."
                                     class="w-full flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                             </div>
                             <div class="flex-1">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">待签名数据</label>
-                                <textarea v-model="rsaSignData" rows="8" placeholder="输入待签名数据..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                                <textarea v-model="rsaSignData" rows="4" placeholder="输入待签名数据..."
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">哈希算法</label>
@@ -435,11 +371,6 @@ const EncryptionView = {
                                     <option value="PSS">PSS</option>
                                 </select>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">密码（可选）</label>
-                                <input type="text" v-model="rsaSignPassword" placeholder="密钥密码"
-                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
-                            </div>
                             <Button @click="rsaSign" variant="primary" size="sm">签名</Button>
                         </div>
                         <div class="flex flex-col space-y-2">
@@ -448,24 +379,24 @@ const EncryptionView = {
                                 <CopyButton v-if="rsaSignResult" :text="rsaSignResult"></CopyButton>
                             </div>
                             <textarea v-model="rsaSignResult" rows="14" readonly placeholder="签名结果..."
-                                class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- RSA Verify -->
                 <div v-if="rsaTab === 'verify'">
-                    <div class="grid grid-cols-2 gap-6 min-h-150">
-                        <div class="flex flex-col space-y-4 gap-4">
+                    <div class="grid grid-cols-2 gap-2 min-h-100">
+                        <div class="flex flex-col gap-2">
                             <div class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">公钥</label>
-                                <textarea v-model="rsaVerifyPublic" rows="4" placeholder="粘贴PEM公钥..."
+                                <textarea v-model="rsaVerifyPublic" rows="3" placeholder="粘贴PEM公钥..."
                                     class="w-full flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                             </div>
                             <div class="flex-1">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">原始数据</label>
-                                <textarea v-model="rsaVerifyData" rows="8" placeholder="输入原始数据..."
-                                    class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                                <textarea v-model="rsaVerifyData" rows="4" placeholder="输入原始数据..."
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">签名(Base64)</label>
@@ -506,7 +437,7 @@ const EncryptionView = {
 
             <!-- AES Section -->
             <div v-if="mainTab === 'aes'" :style="{ height: contentHeight + 'px' }">
-                <div class="grid grid-cols-2 gap-6 h-full">
+                <div class="grid grid-cols-2 gap-2">
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
@@ -540,12 +471,12 @@ const EncryptionView = {
                         </div>
                         <div class="flex-1 flex flex-col gap-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
-                            <textarea v-model="aesInput" rows="10" placeholder="输入明文或密文..."
+                            <textarea v-model="aesInput" rows="5" placeholder="输入明文或密文..."
                                 class="w-full flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                         </div>
                         <div class="flex space-x-2">
-                            <Button @click="aesEncryptEnhanced" variant="primary" size="sm">加密</Button>
-                            <Button @click="aesDecryptEnhanced" variant="secondary" size="sm">解密</Button>
+                            <Button @click="aesEncrypt" variant="primary" size="sm">加密</Button>
+                            <Button @click="aesDecrypt" variant="secondary" size="sm">解密</Button>
                         </div>
                     </div>
                     <div class="flex flex-col space-y-2">
@@ -554,14 +485,14 @@ const EncryptionView = {
                             <CopyButton v-if="aesResult" :text="aesResult"></CopyButton>
                         </div>
                         <textarea v-model="aesResult" rows="14" readonly :placeholder="aesResultPlaceholder"
-                            class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                     </div>
                 </div>
             </div>
 
             <!-- DES Section -->
             <div v-if="mainTab === 'des'" :style="{ height: contentHeight + 'px' }">
-                <div class="grid grid-cols-2 gap-6 h-full">
+                <div class="grid grid-cols-2 gap-6">
                     <div class="flex flex-col space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
@@ -595,12 +526,12 @@ const EncryptionView = {
                         </div>
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
-                            <textarea v-model="desInput" rows="10" placeholder="输入明文或密文..."
-                                class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                            <textarea v-model="desInput" rows="5" placeholder="输入明文或密文..."
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                         </div>
                         <div class="flex space-x-2">
-                            <Button @click="desEncryptEnhanced" variant="primary" size="sm">加密</Button>
-                            <Button @click="desDecryptEnhanced" variant="secondary" size="sm">解密</Button>
+                            <Button @click="desEncrypt" variant="primary" size="sm">加密</Button>
+                            <Button @click="desDecrypt" variant="secondary" size="sm">解密</Button>
                         </div>
                     </div>
                     <div class="flex flex-col space-y-2">
@@ -609,7 +540,62 @@ const EncryptionView = {
                             <CopyButton v-if="desResult" :text="desResult"></CopyButton>
                         </div>
                         <textarea v-model="desResult" rows="14" readonly :placeholder="desResultPlaceholder"
-                            class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3DES Section -->
+            <div v-if="mainTab === '3des'" :style="{ height: contentHeight + 'px' }">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="flex flex-col space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
+                            <input type="text" v-model="tripleDesKey" placeholder="输入3DES密钥"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                        </div>
+                        <div v-if="tripleDesMode !== 'ECB'">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">IV（必需）</label>
+                            <input type="text" v-model="tripleDesIv" placeholder="输入IV"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">模式</label>
+                            <select v-model="tripleDesMode" class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                                <option value="CBC">CBC</option>
+                                <option value="ECB">ECB</option>
+                                <option value="CFB">CFB</option>
+                                <option value="OFB">OFB</option>
+                                <option value="CTR">CTR</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">填充</label>
+                            <select v-model="tripleDesPadding" class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                                <option value="PKCS7">PKCS7</option>
+                                <option value="Zeros">Zeros</option>
+                                <option value="ANSIX923">ANSIX923</option>
+                                <option value="ISO10126">ISO10126</option>
+                                <option value="None">None</option>
+                            </select>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
+                            <textarea v-model="tripleDesInput" rows="5" placeholder="输入明文或密文..."
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                        </div>
+                        <div class="flex space-x-2">
+                            <Button @click="tripleDesEncrypt" variant="primary" size="sm">加密</Button>
+                            <Button @click="tripleDesDecrypt" variant="secondary" size="sm">解密</Button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-sm font-medium text-gray-700">输出</label>
+                            <CopyButton v-if="tripleDesResult" :text="tripleDesResult"></CopyButton>
+                        </div>
+                        <textarea v-model="tripleDesResult" rows="14" readonly :placeholder="tripleDesResultPlaceholder"
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                     </div>
                 </div>
             </div>
@@ -627,10 +613,8 @@ const EncryptionView = {
                 { key: 'convert', label: '格式转换' },
                 { key: 'xml-convert', label: 'XML转换' },
                 { key: 'password', label: '密码操作' },
-                { key: 'encrypt', label: '加密' },
-                { key: 'decrypt', label: '解密' },
-                { key: 'encrypt-enhanced', label: '增强加密' },
-                { key: 'decrypt-enhanced', label: '增强解密' },
+                { key: 'encrypt-enhanced', label: '加密' },
+                { key: 'decrypt-enhanced', label: '解密' },
                 { key: 'sign', label: '签名' },
                 { key: 'verify', label: '验签' }
             ],
@@ -647,7 +631,7 @@ const EncryptionView = {
             rsaXmlXml: '', rsaXmlTargetFormat: 'pkcs8', rsaXmlEncryptAlgorithm: 'AES-256-CBC', rsaXmlFromXmlResult: '',
             // 密码操作
             rsaPasswordPem: '', rsaPasswordPassword: '', rsaPasswordTargetEncryptedType: 'EncryptedPkcs8PrivateKey', rsaPasswordAlgorithm: 'AES-256-CBC', rsaPasswordResult: '',
-            rsaRemoveEncryptedPem: '', rsaRemovePassword: '', rsaRemoveResult: '',
+            rsaRemoveEncryptedPem: '', rsaRemovePwd: '', rsaRemoveResult: '',
             // 增强加密
             rsaEncEnhancedPublic: '', rsaEncEnhancedPlaintext: '', rsaEncEnhancedPadding: 'OAEP-SHA256', rsaEncEnhancedResult: '',
             // 增强解密
@@ -666,7 +650,8 @@ const EncryptionView = {
     },
     computed: {
         aesResultPlaceholder() { return this.aesResult ? '' : '加密/解密结果...'; },
-        desResultPlaceholder() { return this.desResult ? '' : '加密/解密结果...'; }
+        desResultPlaceholder() { return this.desResult ? '' : '加密/解密结果...'; },
+        tripleDesResultPlaceholder() { return this.tripleDesResult ? '' : '加密/解密结果...'; }
     },
     mounted() {
         this.updateHeight();
@@ -713,27 +698,87 @@ const EncryptionView = {
         },
         async aesEncrypt() {
             try {
-                const res = await api('POST', '/encryption/aes/encrypt', { plaintext: this.aesInput, key: this.aesKey, iv: this.aesIv || null });
+                const res = await api('POST', '/encryption/aes/encrypt', { plaintext: this.aesInput, key: this.aesKey, iv: this.aesIv || null, mode: this.aesMode, padding: this.aesPadding });
                 this.aesResult = res.data;
             } catch(e) { alert('加密失败: ' + e.message); }
         },
         async aesDecrypt() {
             try {
-                const res = await api('POST', '/encryption/aes/decrypt', { ciphertext: this.aesInput, key: this.aesKey, iv: this.aesIv || null });
+                const res = await api('POST', '/encryption/aes/decrypt', { ciphertext: this.aesInput, key: this.aesKey, iv: this.aesIv || null, mode: this.aesMode, padding: this.aesPadding });
                 this.aesResult = res.data;
             } catch(e) { alert('解密失败: ' + e.message); }
         },
         async desEncrypt() {
             try {
-                const res = await api('POST', '/encryption/des/encrypt', { plaintext: this.desInput, key: this.desKey, iv: this.desIv || null });
+                const res = await api('POST', '/encryption/des/encrypt', { plaintext: this.desInput, key: this.desKey, iv: this.desIv || null, mode: this.desMode, padding: this.desPadding });
                 this.desResult = res.data;
             } catch(e) { alert('加密失败: ' + e.message); }
         },
         async desDecrypt() {
             try {
-                const res = await api('POST', '/encryption/des/decrypt', { ciphertext: this.desInput, key: this.desKey, iv: this.desIv || null });
+                const res = await api('POST', '/encryption/des/decrypt', { ciphertext: this.desInput, key: this.desKey, iv: this.desIv || null, mode: this.desMode, padding: this.desPadding });
                 this.desResult = res.data;
             } catch(e) { alert('解密失败: ' + e.message); }
+        },
+        async tripleDesEncrypt() {
+            try {
+                const res = await api('POST', '/encryption/tripledes/encrypt', { plaintext: this.tripleDesInput, key: this.tripleDesKey, iv: this.tripleDesIv || null, mode: this.tripleDesMode, padding: this.tripleDesPadding });
+                this.tripleDesResult = res.data;
+            } catch(e) { alert('加密失败: ' + e.message); }
+        },
+        async tripleDesDecrypt() {
+            try {
+                const res = await api('POST', '/encryption/tripledes/decrypt', { ciphertext: this.tripleDesInput, key: this.tripleDesKey, iv: this.tripleDesIv || null, mode: this.tripleDesMode, padding: this.tripleDesPadding });
+                this.tripleDesResult = res.data;
+            } catch(e) { alert('解密失败: ' + e.message); }
+        },
+        async rsaConvertToXml() {
+            try {
+                const res = await api('POST', '/encryption/rsa/convert-to-xml', { pem: this.rsaXmlPem, includePrivateParams: this.rsaXmlIncludePrivate});
+                this.rsaXmlResult = res.data;
+            } catch(e) { alert('转换失败: ' + e.message); }
+        },
+        async rsaConvertFromXml() {
+            try {
+                const res = await api('POST', '/encryption/rsa/convert-from-xml', { xml: this.rsaXmlXml, targetFormat: this.rsaXmlTargetFormat, encryptAlgorithm: this.rsaXmlEncryptAlgorithm });
+                this.rsaXmlFromXmlResult = res.data;
+            } catch(e) { alert('转换失败: ' + e.message); }
+        },
+        async rsaAddPassword() {
+            try {
+                const res = await api('POST', '/encryption/rsa/add-password', { pem: this.rsaPasswordPem, password: this.rsaPasswordPassword, targetEncryptedType: this.rsaPasswordTargetEncryptedType, algorithm: this.rsaPasswordAlgorithm });
+                this.rsaPasswordResult = res.data;
+            } catch(e) { alert('添加密码失败: ' + e.message); }
+        },
+        async rsaDoRemovePassword() {
+            try {
+                const res = await api('POST', '/encryption/rsa/remove-password', { pem: this.rsaRemoveEncryptedPem, password: this.rsaRemovePwd });
+                this.rsaRemoveResult = res.data;
+            } catch(e) { alert('移除密码失败: ' + e.message); }
+        },
+        async rsaEncryptEnhanced() {
+            try {
+                const res = await api('POST', '/encryption/rsa/encrypt', { publicKey: this.rsaEncEnhancedPublic, plaintext: this.rsaEncEnhancedPlaintext, padding: this.rsaEncEnhancedPadding });
+                this.rsaEncEnhancedResult = res.data;
+            } catch(e) { alert('加密失败: ' + e.message); }
+        },
+        async rsaDecryptEnhanced() {
+            try {
+                const res = await api('POST', '/encryption/rsa/decrypt', { privateKey: this.rsaDecEnhancedPrivate, ciphertext: this.rsaDecEnhancedCiphertext, padding: this.rsaDecEnhancedPadding, password: this.rsaDecEnhancedPassword || null });
+                this.rsaDecEnhancedResult = res.data;
+            } catch(e) { alert('解密失败: ' + e.message); }
+        },
+        async rsaSign() {
+            try {
+                const res = await api('POST', '/encryption/rsa/sign', { privateKey: this.rsaSignPrivate, data: this.rsaSignData, hashAlgorithm: this.rsaSignHashAlgorithm, padding: this.rsaSignPadding, password: this.rsaSignPassword || null });
+                this.rsaSignResult = res.data;
+            } catch(e) { alert('签名失败: ' + e.message); }
+        },
+        async rsaVerify() {
+            try {
+                const res = await api('POST', '/encryption/rsa/verify', { publicKey: this.rsaVerifyPublic, data: this.rsaVerifyData, signature: this.rsaVerifySignature, hashAlgorithm: this.rsaVerifyHashAlgorithm, padding: this.rsaVerifyPadding });
+                this.rsaVerifyResult = res.data;
+            } catch(e) { this.rsaVerifyResult = false; }
         }
     }
 };
