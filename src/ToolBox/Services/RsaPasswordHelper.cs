@@ -17,9 +17,9 @@ public static class RsaPasswordHelper
     /// <param name="algorithm">加密算法（仅当targetEncryptedType为EncryptedPkcs1PrivateKey时适用），支持的算法：AES-256-CBC, DES-EDE3-CBC</param>
     /// <returns>加密后的PEM格式密钥字符串</returns>
     /// <exception cref="ArgumentException">当pem不是私钥或targetEncryptedType无效时引发</exception>
-    public static string AddPasswordToPem(string pem, byte[] password, SharpDevLib.PemType targetEncryptedType, string algorithm = "AES-256-CBC")
+    public static string AddPasswordToPem(string pem, byte[] password, PemType targetEncryptedType, string algorithm = "AES-256-CBC")
     {
-        if (targetEncryptedType != SharpDevLib.PemType.EncryptedPkcs1PrivateKey && targetEncryptedType != SharpDevLib.PemType.EncryptedPkcs8PrivateKey)
+        if (targetEncryptedType != PemType.EncryptedPkcs1PrivateKey && targetEncryptedType != PemType.EncryptedPkcs8PrivateKey)
         {
             throw new ArgumentException($"目标加密类型必须是EncryptedPkcs1PrivateKey或EncryptedPkcs8PrivateKey，当前为：{targetEncryptedType}");
         }
@@ -32,7 +32,7 @@ public static class RsaPasswordHelper
 
         // 如果已经是加密的PEM，先解密
         byte[]? currentPassword = null;
-        if (info.Type == SharpDevLib.PemType.EncryptedPkcs1PrivateKey || info.Type == SharpDevLib.PemType.EncryptedPkcs8PrivateKey)
+        if (info.Type == PemType.EncryptedPkcs1PrivateKey || info.Type == PemType.EncryptedPkcs8PrivateKey)
         {
             throw new ArgumentException("PEM已经是加密格式，请先使用RemovePasswordFromPem移除密码");
         }
@@ -52,15 +52,15 @@ public static class RsaPasswordHelper
     public static string RemovePasswordFromPem(string encryptedPem, byte[] password)
     {
         var info = RsaKeyHelper.GetKeyInfo(encryptedPem);
-        if (info.Type != SharpDevLib.PemType.EncryptedPkcs1PrivateKey && info.Type != SharpDevLib.PemType.EncryptedPkcs8PrivateKey)
+        if (info.Type != PemType.EncryptedPkcs1PrivateKey && info.Type != PemType.EncryptedPkcs8PrivateKey)
         {
             throw new ArgumentException($"PEM格式不是加密的私钥，当前类型为：{info.Type}");
         }
 
         // 确定目标未加密类型
-        SharpDevLib.PemType targetType = info.Type == SharpDevLib.PemType.EncryptedPkcs1PrivateKey
-            ? SharpDevLib.PemType.Pkcs1PrivateKey
-            : SharpDevLib.PemType.Pkcs8PrivateKey;
+        PemType targetType = info.Type == PemType.EncryptedPkcs1PrivateKey
+            ? PemType.Pkcs1PrivateKey
+            : PemType.Pkcs8PrivateKey;
 
         using var rsa = RSA.Create();
         rsa.ImportPem(encryptedPem, password);

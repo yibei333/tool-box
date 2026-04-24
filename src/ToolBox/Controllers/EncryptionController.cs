@@ -47,91 +47,11 @@ public class EncryptionController : ControllerBase
         return DataReply.Succeed(result);
     }
 
-    [HttpPost("rsa/key-info")]
-    public DataReply<RsaKeyInfoResult> RsaKeyInfo([FromBody] RsaKeyInfoRequest request)
-    {
-        var password = string.IsNullOrEmpty(request.Password) ? null : Encoding.UTF8.GetBytes(request.Password);
-        var info = RsaKeyHelper.GetKeyInfo(request.Key, password);
-        return DataReply.Succeed(new RsaKeyInfoResult
-        {
-            Type = info.Type.ToString(),
-            IsPrivate = info.IsPrivate,
-            IsEncrypted = info.IsEncrypted,
-            KeySize = info.KeySize
-        });
-    }
-
-    [HttpPost("rsa/encrypt")]
-    public DataReply<string> RsaEncrypt([FromBody] RsaEncryptRequest request)
-    {
-        using var rsa = RSA.Create();
-        rsa.ImportPem(request.PublicKey);
-        var data = Encoding.UTF8.GetBytes(request.Plaintext);
-        var encrypted = rsa.Encrypt(data, RSAEncryptionPadding.OaepSHA256);
-        return DataReply.Succeed(Convert.ToBase64String(encrypted));
-    }
-
-    [HttpPost("rsa/decrypt")]
-    public DataReply<string> RsaDecrypt([FromBody] RsaDecryptRequest request)
-    {
-        using var rsa = RSA.Create();
-        var password = string.IsNullOrEmpty(request.Password) ? null : Encoding.UTF8.GetBytes(request.Password);
-        rsa.ImportPem(request.PrivateKey, password);
-        var data = Convert.FromBase64String(request.Ciphertext);
-        var decrypted = rsa.Decrypt(data, RSAEncryptionPadding.OaepSHA256);
-        return DataReply.Succeed(Encoding.UTF8.GetString(decrypted));
-    }
-
-    [HttpPost("aes/encrypt")]
-    public DataReply<string> AesEncrypt([FromBody] SymmetricEncryptRequest request)
-    {
-        using var aes = Aes.Create();
-        aes.Padding = PaddingMode.PKCS7;
-        aes.SetKeyAutoPad(Encoding.UTF8.GetBytes(request.Key));
-        if (!string.IsNullOrEmpty(request.Iv)) aes.SetIVAutoPad(Encoding.UTF8.GetBytes(request.Iv));
-        var data = Encoding.UTF8.GetBytes(request.Plaintext);
-        var encrypted = aes.Encrypt(data);
-        return DataReply.Succeed(Convert.ToBase64String(encrypted));
-    }
-
-    [HttpPost("aes/decrypt")]
-    public DataReply<string> AesDecrypt([FromBody] SymmetricDecryptRequest request)
-    {
-        using var aes = Aes.Create();
-        aes.SetKeyAutoPad(Encoding.UTF8.GetBytes(request.Key));
-        if (!string.IsNullOrEmpty(request.Iv)) aes.SetIVAutoPad(Encoding.UTF8.GetBytes(request.Iv));
-        var data = Convert.FromBase64String(request.Ciphertext);
-        var decrypted = aes.Decrypt(data);
-        return DataReply.Succeed(Encoding.UTF8.GetString(decrypted));
-    }
-
-    [HttpPost("des/encrypt")]
-    public DataReply<string> DesEncrypt([FromBody] SymmetricEncryptRequest request)
-    {
-        using var des = DES.Create();
-        des.SetKeyAutoPad(Encoding.UTF8.GetBytes(request.Key));
-        if (!string.IsNullOrEmpty(request.Iv)) des.SetIVAutoPad(Encoding.UTF8.GetBytes(request.Iv));
-        var data = Encoding.UTF8.GetBytes(request.Plaintext);
-        var encrypted = des.Encrypt(data);
-        return DataReply.Succeed(Convert.ToBase64String(encrypted));
-    }
-
-    [HttpPost("des/decrypt")]
-    public DataReply<string> DesDecrypt([FromBody] SymmetricDecryptRequest request)
-    {
-        using var des = DES.Create();
-        des.SetKeyAutoPad(Encoding.UTF8.GetBytes(request.Key));
-        if (!string.IsNullOrEmpty(request.Iv)) des.SetIVAutoPad(Encoding.UTF8.GetBytes(request.Iv));
-        var data = Convert.FromBase64String(request.Ciphertext);
-        var decrypted = des.Decrypt(data);
-        return DataReply.Succeed(Encoding.UTF8.GetString(decrypted));
-    }
-
     [HttpPost("rsa/convert-to-xml")]
-    public DataReply<string> RsaConvertToXml([FromBody] RsaConvertXmlRequest request)
+    public DataReply<string> RsaConvertToXml([FromBody] RsaConvertToXmlRequest request)
     {
         if (request.Pem.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var xml = RsaXmlHelper.ConvertPemToXml(request.Pem, request.IncludePrivateParameters);
+        var xml = RsaXmlHelper.ConvertPemToXml(request.Pem, request.IncludePrivateParams);
         return DataReply.Succeed(xml);
     }
 
@@ -139,7 +59,11 @@ public class EncryptionController : ControllerBase
     public DataReply<string> RsaConvertFromXml([FromBody] RsaConvertFromXmlRequest request)
     {
         if (request.Xml.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入XML密钥");
-        var pem = RsaXmlHelper.ConvertXmlToPem(request.Xml, request.TargetFormat, request.EncryptAlgorithm);
+        if (request.TargetFormat.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入目标格式");
+        var pemType = PemType.Pkcs1PrivateKey;
+        if (request.TargetFormat.Equals("pkcs8")) pemType = PemType.Pkcs8PrivateKey;
+        else if (request.TargetFormat.Equals("public")) pemType = PemType.X509SubjectPublicKey;
+        var pem = RsaXmlHelper.ConvertXmlToPem(request.Xml, pemType);
         return DataReply.Succeed(pem);
     }
 
@@ -147,24 +71,27 @@ public class EncryptionController : ControllerBase
     public DataReply<string> RsaAddPassword([FromBody] RsaAddPasswordRequest request)
     {
         if (request.Pem.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        if (string.IsNullOrEmpty(request.Password)) return DataReply.Succeed("请输入密码");
+        if (request.Password.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密码");
+        if (request.TargetEncryptedType.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入目标格式");
         var passwordBytes = Encoding.UTF8.GetBytes(request.Password);
-        var encryptedPem = RsaPasswordHelper.AddPasswordToPem(request.Pem, passwordBytes, request.TargetEncryptedType, request.Algorithm);
+        var targetPemType = PemType.EncryptedPkcs1PrivateKey;
+        if (request.TargetEncryptedType.Equals("EncryptedPkcs8PrivateKey")) targetPemType = PemType.EncryptedPkcs8PrivateKey;
+        var encryptedPem = RsaPasswordHelper.AddPasswordToPem(request.Pem, passwordBytes, targetPemType, request.Algorithm);
         return DataReply.Succeed(encryptedPem);
     }
 
     [HttpPost("rsa/remove-password")]
     public DataReply<string> RsaRemovePassword([FromBody] RsaRemovePasswordRequest request)
     {
-        if (request.EncryptedPem.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入加密的密钥");
+        if (request.Pem.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入加密的密钥");
         if (string.IsNullOrEmpty(request.Password)) return DataReply.Succeed("请输入密码");
         var passwordBytes = Encoding.UTF8.GetBytes(request.Password);
-        var pem = RsaPasswordHelper.RemovePasswordFromPem(request.EncryptedPem, passwordBytes);
+        var pem = RsaPasswordHelper.RemovePasswordFromPem(request.Pem, passwordBytes);
         return DataReply.Succeed(pem);
     }
 
-    [HttpPost("rsa/encrypt-enhanced")]
-    public DataReply<string> RsaEncryptEnhanced([FromBody] RsaEncryptEnhancedRequest request)
+    [HttpPost("rsa/encrypt")]
+    public DataReply<string> RsaEncrypt([FromBody] RsaEncryptRequest request)
     {
         if (request.PublicKey.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入公钥");
         if (request.Plaintext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入明文");
@@ -173,8 +100,8 @@ public class EncryptionController : ControllerBase
         return DataReply.Succeed(ciphertext);
     }
 
-    [HttpPost("rsa/decrypt-enhanced")]
-    public DataReply<string> RsaDecryptEnhanced([FromBody] RsaDecryptEnhancedRequest request)
+    [HttpPost("rsa/decrypt")]
+    public DataReply<string> RsaDecrypt([FromBody] RsaDecryptRequest request)
     {
         if (request.PrivateKey.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入私钥");
         if (request.Ciphertext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密文");
@@ -196,8 +123,8 @@ public class EncryptionController : ControllerBase
         return DataReply.Succeed(signature);
     }
 
-    [HttpPost("rsa/verify")]
-    public DataReply<bool> RsaVerify([FromBody] RsaVerifyRequest request)
+    [HttpPost("rsa/verify-sign")]
+    public DataReply<bool> RsaVerifySign([FromBody] RsaVerifySignRequest request)
     {
         if (request.PublicKey.IsNullOrWhiteSpace()) return DataReply.Succeed(false);
         if (request.Data.IsNullOrWhiteSpace()) return DataReply.Succeed(false);
@@ -208,70 +135,66 @@ public class EncryptionController : ControllerBase
         return DataReply.Succeed(verified);
     }
 
-    [HttpPost("aes/encrypt-enhanced")]
-    public DataReply<string> AesEncryptEnhanced([FromBody] SymmetricEncryptEnhancedRequest request)
+    [HttpPost("aes/encrypt")]
+    public DataReply<string> AesEncrypt([FromBody] SymmetricEncryptRequest request)
     {
-        if (request.Plaintext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入明文");
-        if (request.Key.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var mode = SymmetricCryptoHelper.CreateCipherMode(request.Mode);
-        var padding = SymmetricCryptoHelper.CreatePaddingMode(request.Padding);
-        var ciphertext = SymmetricCryptoHelper.AesEncrypt(request.Plaintext, request.Key, mode, padding, request.Iv);
-        return DataReply.Succeed(ciphertext);
+        using var algorithm = Aes.Create();
+        return SymmetricEncrypt(algorithm, request);
     }
 
-    [HttpPost("aes/decrypt-enhanced")]
-    public DataReply<string> AesDecryptEnhanced([FromBody] SymmetricDecryptEnhancedRequest request)
+    [HttpPost("aes/decrypt")]
+    public DataReply<string> AesDecrypt([FromBody] SymmetricDecryptRequest request)
     {
-        if (request.Ciphertext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密文");
-        if (request.Key.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var mode = SymmetricCryptoHelper.CreateCipherMode(request.Mode);
-        var padding = SymmetricCryptoHelper.CreatePaddingMode(request.Padding);
-        var plaintext = SymmetricCryptoHelper.AesDecrypt(request.Ciphertext, request.Key, mode, padding, request.Iv);
-        return DataReply.Succeed(plaintext);
+        using var algorithm = Aes.Create();
+        return SymmetricDecrypt(algorithm, request);
     }
 
-    [HttpPost("des/encrypt-enhanced")]
-    public DataReply<string> DesEncryptEnhanced([FromBody] SymmetricEncryptEnhancedRequest request)
+    [HttpPost("des/encrypt")]
+    public DataReply<string> DesEncrypt([FromBody] SymmetricEncryptRequest request)
     {
-        if (request.Plaintext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入明文");
-        if (request.Key.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var mode = SymmetricCryptoHelper.CreateCipherMode(request.Mode);
-        var padding = SymmetricCryptoHelper.CreatePaddingMode(request.Padding);
-        var ciphertext = SymmetricCryptoHelper.DesEncrypt(request.Plaintext, request.Key, mode, padding, request.Iv);
-        return DataReply.Succeed(ciphertext);
+        using var algorithm = DES.Create();
+        return SymmetricEncrypt(algorithm, request);
     }
 
-    [HttpPost("des/decrypt-enhanced")]
-    public DataReply<string> DesDecryptEnhanced([FromBody] SymmetricDecryptEnhancedRequest request)
+    [HttpPost("des/decrypt")]
+    public DataReply<string> DesDecrypt([FromBody] SymmetricDecryptRequest request)
     {
-        if (request.Ciphertext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密文");
-        if (request.Key.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var mode = SymmetricCryptoHelper.CreateCipherMode(request.Mode);
-        var padding = SymmetricCryptoHelper.CreatePaddingMode(request.Padding);
-        var plaintext = SymmetricCryptoHelper.DesDecrypt(request.Ciphertext, request.Key, mode, padding, request.Iv);
-        return DataReply.Succeed(plaintext);
+        using var algorithm = DES.Create();
+        return SymmetricDecrypt(algorithm, request);
     }
 
-    [HttpPost("3des/encrypt")]
-    public DataReply<string> TripleDesEncrypt([FromBody] SymmetricEncryptEnhancedRequest request)
+    [HttpPost("tripledes/encrypt")]
+    public DataReply<string> TripleDesEncrypt([FromBody] SymmetricEncryptRequest request)
     {
-        if (request.Plaintext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入明文");
-        if (request.Key.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var mode = SymmetricCryptoHelper.CreateCipherMode(request.Mode);
-        var padding = SymmetricCryptoHelper.CreatePaddingMode(request.Padding);
-        var ciphertext = SymmetricCryptoHelper.TripleDesEncrypt(request.Plaintext, request.Key, mode, padding, request.Iv);
-        return DataReply.Succeed(ciphertext);
+        using var algorithm = TripleDES.Create();
+        return SymmetricEncrypt(algorithm, request);
     }
 
-    [HttpPost("3des/decrypt")]
-    public DataReply<string> TripleDesDecrypt([FromBody] SymmetricDecryptEnhancedRequest request)
+    [HttpPost("tripledes/decrypt")]
+    public DataReply<string> TripleDesDecrypt([FromBody] SymmetricDecryptRequest request)
     {
-        if (request.Ciphertext.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密文");
-        if (request.Key.IsNullOrWhiteSpace()) return DataReply.Succeed("请输入密钥");
-        var mode = SymmetricCryptoHelper.CreateCipherMode(request.Mode);
-        var padding = SymmetricCryptoHelper.CreatePaddingMode(request.Padding);
-        var plaintext = SymmetricCryptoHelper.TripleDesDecrypt(request.Ciphertext, request.Key, mode, padding, request.Iv);
-        return DataReply.Succeed(plaintext);
+        using var algorithm = TripleDES.Create();
+        return SymmetricDecrypt(algorithm, request);
+    }
+
+    static DataReply<string> SymmetricEncrypt(SymmetricAlgorithm algorithm, SymmetricEncryptRequest request)
+    {
+        algorithm.Mode = request.Mode.ToEnum<CipherMode>();
+        algorithm.Padding = request.Padding.ToEnum<PaddingMode>();
+        algorithm.SetKeyAutoPad(request.Key.Utf8Decode());
+        algorithm.SetIVAutoPad(request.Iv?.Utf8Decode() ?? []);
+        var encrypted = algorithm.Encrypt(request.Plaintext.Utf8Decode());
+        return DataReply.Succeed(encrypted.Base64Encode());
+    }
+
+    static DataReply<string> SymmetricDecrypt(SymmetricAlgorithm algorithm, SymmetricDecryptRequest request)
+    {
+        algorithm.Mode = request.Mode.ToEnum<CipherMode>();
+        algorithm.Padding = request.Padding.ToEnum<PaddingMode>();
+        algorithm.SetKeyAutoPad(request.Key.Utf8Decode());
+        algorithm.SetIVAutoPad(request.Iv?.Utf8Decode() ?? []);
+        var plainBytes = algorithm.Decrypt(request.Ciphertext.Base64Decode());
+        return DataReply.Succeed(plainBytes.Utf8Encode());
     }
 }
 
@@ -279,20 +202,13 @@ public class RsaGenerateRequest { public int KeySize { get; set; } = 2048; }
 public class RsaKeyPairResult { public string PrivateKey { get; set; } = ""; public string PublicKey { get; set; } = ""; }
 public class RsaCompareRequest { public string PrivateKey { get; set; } = ""; public string PublicKey { get; set; } = ""; }
 public class RsaConvertPemRequest { public string Pem { get; set; } = ""; public string TargetFormat { get; set; } = "pkcs8"; public string? Password { get; set; } }
-public class RsaKeyInfoRequest { public string Key { get; set; } = ""; public string? Password { get; set; } }
-public class RsaKeyInfoResult { public string Type { get; set; } = ""; public bool IsPrivate { get; set; } public bool IsEncrypted { get; set; } public int KeySize { get; set; } }
-public class RsaEncryptRequest { public string PublicKey { get; set; } = ""; public string Plaintext { get; set; } = ""; }
-public class RsaDecryptRequest { public string PrivateKey { get; set; } = ""; public string Ciphertext { get; set; } = ""; public string? Password { get; set; } }
-public class SymmetricEncryptRequest { public string Plaintext { get; set; } = ""; public string Key { get; set; } = ""; public string? Iv { get; set; } }
-public class SymmetricDecryptRequest { public string Ciphertext { get; set; } = ""; public string Key { get; set; } = ""; public string? Iv { get; set; } }
-
-public class RsaConvertXmlRequest { public string Pem { get; set; } = ""; public bool IncludePrivateParameters { get; set; } = false; }
-public class RsaConvertFromXmlRequest { public string Xml { get; set; } = ""; public SharpDevLib.PemType TargetFormat { get; set; } = SharpDevLib.PemType.Pkcs8PrivateKey; public string EncryptAlgorithm { get; set; } = "AES-256-CBC"; }
-public class RsaAddPasswordRequest { public string Pem { get; set; } = ""; public string Password { get; set; } = ""; public SharpDevLib.PemType TargetEncryptedType { get; set; } = SharpDevLib.PemType.EncryptedPkcs8PrivateKey; public string Algorithm { get; set; } = "AES-256-CBC"; }
-public class RsaRemovePasswordRequest { public string EncryptedPem { get; set; } = ""; public string Password { get; set; } = ""; }
-public class RsaEncryptEnhancedRequest { public string PublicKey { get; set; } = ""; public string Plaintext { get; set; } = ""; public string Padding { get; set; } = "OAEP-SHA256"; }
-public class RsaDecryptEnhancedRequest { public string PrivateKey { get; set; } = ""; public string Ciphertext { get; set; } = ""; public string Padding { get; set; } = "OAEP-SHA256"; public string? Password { get; set; } }
+public class RsaConvertToXmlRequest { public string Pem { get; set; } = ""; public bool IncludePrivateParams { get; set; } = false; }
+public class RsaConvertFromXmlRequest { public string Xml { get; set; } = ""; public string? TargetFormat { get; set; } }
+public class RsaAddPasswordRequest { public string Pem { get; set; } = ""; public string Password { get; set; } = ""; public string? TargetEncryptedType { get; set; } public string Algorithm { get; set; } = "AES-256-CBC"; }
+public class RsaRemovePasswordRequest { public string Pem { get; set; } = ""; public string Password { get; set; } = ""; }
+public class RsaEncryptRequest { public string PublicKey { get; set; } = ""; public string Plaintext { get; set; } = ""; public string Padding { get; set; } = "OAEP-SHA256"; }
+public class RsaDecryptRequest { public string PrivateKey { get; set; } = ""; public string Ciphertext { get; set; } = ""; public string Padding { get; set; } = "OAEP-SHA256"; public string? Password { get; set; } }
 public class RsaSignRequest { public string PrivateKey { get; set; } = ""; public string Data { get; set; } = ""; public string HashAlgorithm { get; set; } = "SHA256"; public string Padding { get; set; } = "PKCS1"; public string? Password { get; set; } }
-public class RsaVerifyRequest { public string PublicKey { get; set; } = ""; public string Data { get; set; } = ""; public string Signature { get; set; } = ""; public string HashAlgorithm { get; set; } = "SHA256"; public string Padding { get; set; } = "PKCS1"; }
-public class SymmetricEncryptEnhancedRequest { public string Plaintext { get; set; } = ""; public string Key { get; set; } = ""; public string Mode { get; set; } = "CBC"; public string Padding { get; set; } = "PKCS7"; public string? Iv { get; set; } }
-public class SymmetricDecryptEnhancedRequest { public string Ciphertext { get; set; } = ""; public string Key { get; set; } = ""; public string Mode { get; set; } = "CBC"; public string Padding { get; set; } = "PKCS7"; public string? Iv { get; set; } }
+public class RsaVerifySignRequest { public string PublicKey { get; set; } = ""; public string Data { get; set; } = ""; public string Signature { get; set; } = ""; public string HashAlgorithm { get; set; } = "SHA256"; public string Padding { get; set; } = "PKCS1"; }
+public class SymmetricEncryptRequest { public string Plaintext { get; set; } = ""; public string Key { get; set; } = ""; public string Mode { get; set; } = "CBC"; public string Padding { get; set; } = "PKCS7"; public string? Iv { get; set; } }
+public class SymmetricDecryptRequest { public string Ciphertext { get; set; } = ""; public string Key { get; set; } = ""; public string Mode { get; set; } = "CBC"; public string Padding { get; set; } = "PKCS7"; public string? Iv { get; set; } }
