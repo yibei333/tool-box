@@ -66,6 +66,6 @@ if !errorlevel! neq 0 (
 )
 
 echo 服务 "%SERVICE_NAME%" 已成功启动。
-start " " "http://localhost:1234"
+start " " "http://localhost:6315"
 pause
 exit /b 0
