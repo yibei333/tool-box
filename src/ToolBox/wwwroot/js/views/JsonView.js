@@ -1,46 +1,50 @@
 const JsonView = {
     template: `
-    <div class="space-y-6">
-        <div class="glass rounded-2xl p-6 shadow-xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
-                <span class="text-indigo-700">📄</span>
-                <span>JSON工具</span>
-            </h2>
+    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+        <span class="text-indigo-700">📄</span>
+        <span>JSON工具</span>
+    </h2>
 
-            <div class="flex space-x-2 mb-6 border-b border-gray-200 pb-3">
-                <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
-                    :class="['px-4 py-2 text-sm rounded-t-lg',
-                             activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
-                    {{ tab.label }}
-                </button>
+    <!-- Desktop tabs -->
+    <div class="hidden lg:flex space-x-2 mb-2 border-b border-gray-200 pb-3">
+        <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
+            :class="['px-4 py-2 text-sm rounded-t-lg',
+                     activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
+            {{ tab.label }}
+        </button>
+    </div>
+    <!-- Mobile dropdown -->
+    <div class="lg:hidden mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-2">选择操作</label>
+        <select v-model="activeTab" class=" rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 outline-none">
+            <option v-for="tab in tabs" :key="tab.key" :value="tab.key">{{ tab.label }}</option>
+        </select>
+    </div>
+
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+            <div class="flex-1 flex flex-col gap-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ inputLabel }}</label>
+                <textarea v-model="currentInput" :placeholder="inputPlaceholder"
+                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
 
-            <div class="grid grid-cols-2 gap-6" :style="{ height: contentHeight + 'px' }">
-                <div class="flex flex-col space-y-4">
-                    <div class="flex-1 min-h-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ inputLabel }}</label>
-                        <textarea v-model="currentInput" :rows="textareaRows" :placeholder="inputPlaceholder"
-                            class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
-                    </div>
-
-                    <div v-if="activeTab === 'to-csharp'" class="flex items-center space-x-2">
-                        <label class="text-sm text-gray-700">根类名:</label>
-                        <input type="text" v-model="rootName" placeholder="Root"
-                            class="w-40 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    </div>
-
-                    <Button @click="execute" variant="primary">{{ executeLabel }}</Button>
-                </div>
-
-                <div class="flex flex-col space-y-4">
-                    <div class="flex items-center justify-between mb-1">
-                        <label class="block text-sm font-medium text-gray-700">结果</label>
-                        <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
-                    </div>
-                    <textarea v-model="currentOutput" :rows="textareaRows" readonly :placeholder="outputPlaceholder"
-                        class="w-full h-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 focus:border-indigo-500 outline-none resize-none"></textarea>
-                </div>
+            <div v-if="activeTab === 'to-csharp'" class="flex items-center space-x-2">
+                <label class="text-sm text-gray-700">根类名:</label>
+                <input type="text" v-model="rootName" placeholder="Root"
+                    class="w-40 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
             </div>
+
+            <Button @click="execute" variant="primary">{{ executeLabel }}</Button>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between mb-1">
+                <label class="block text-sm font-medium text-gray-700">结果</label>
+                <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
+            </div>
+            <textarea v-model="currentOutput" readonly :placeholder="outputPlaceholder"
+                class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 focus:border-indigo-500 outline-none resize-none"></textarea>
         </div>
     </div>
     `,
@@ -58,13 +62,9 @@ const JsonView = {
             ],
             inputs: {},
             outputs: {},
-            contentHeight: 500
         };
     },
     computed: {
-        textareaRows() {
-            return Math.max(10, Math.floor((this.contentHeight - 80) / 24));
-        },
         currentInput: {
             get() { return this.inputs[this.activeTab] || ''; },
             set(v) { this.inputs[this.activeTab] = v; }
@@ -86,18 +86,7 @@ const JsonView = {
             return { format: '格式化', compress: '压缩', 'to-csharp': '转换', 'from-csharp': '转换', escape: '转义', unescape: '去除转义' }[this.activeTab];
         }
     },
-    mounted() {
-        this.updateHeight();
-        window.addEventListener('resize', this.updateHeight);
-    },
-    beforeUnmount() {
-        window.removeEventListener('resize', this.updateHeight);
-    },
     methods: {
-        updateHeight() {
-            const h = window.innerHeight;
-            this.contentHeight = Math.max(400, h - 230);
-        },
         async execute() {
             if (!this.currentInput) return;
             this.currentOutput = '';

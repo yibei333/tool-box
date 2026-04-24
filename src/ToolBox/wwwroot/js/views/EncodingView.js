@@ -1,42 +1,46 @@
 const EncodingView = {
     template: `
-    <div class="space-y-6">
-        <div class="glass rounded-2xl p-6 shadow-xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
-                <span class="text-indigo-700">🔠</span>
-                <span>编码转换</span>
-            </h2>
+    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+        <span class="text-indigo-700">🔠</span>
+        <span>编码转换</span>
+    </h2>
 
-            <div class="flex space-x-2 mb-6 border-b border-gray-200 pb-3">
-                <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
-                    :class="['px-4 py-2 text-sm rounded-t-lg',
-                             activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
-                    {{ tab.label }}
-                </button>
+    <!-- Desktop tabs -->
+    <div class="hidden lg:flex mb-2 border-b border-gray-200 pb-2">
+        <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
+            :class="['px-4 py-2 text-sm rounded-t-lg',
+                     activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
+            {{ tab.label }}
+        </button>
+    </div>
+    <!-- Mobile dropdown -->
+    <div class="lg:hidden mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-2">选择编码类型</label>
+        <select v-model="activeTab" class=" rounded-xl border border-gray-300 px-2 py-1 text-sm focus:border-indigo-500 outline-none">
+            <option v-for="tab in tabs" :key="tab.key" :value="tab.key">{{ tab.label }}</option>
+        </select>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div class="flex flex-col">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
+                <textarea v-model="currentInput" :placeholder="inputPlaceholder"
+                    class="min-h-50 w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
-
-            <div class="grid grid-cols-2 gap-6">
-                <div class="flex flex-col space-y-4">
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
-                        <textarea v-model="currentInput" rows="10" :placeholder="inputPlaceholder"
-                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
-                    </div>
-                    <div class="flex space-x-2">
-                        <Button @click="encode" variant="primary" size="sm">{{ encodeLabel }}</Button>
-                        <Button @click="decode" variant="secondary" size="sm">{{ decodeLabel }}</Button>
-                    </div>
-                </div>
-
-                <div class="flex flex-col space-y-2">
-                    <div class="flex items-center justify-between mb-1">
-                        <label class="block text-sm font-medium text-gray-700">输出</label>
-                        <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
-                    </div>
-                    <textarea v-model="currentOutput" rows="10" readonly :placeholder="outputPlaceholder"
-                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
-                </div>
+            <div class="flex space-x-2">
+                <Button @click="encode" variant="primary" size="sm">{{ encodeLabel }}</Button>
+                <Button @click="decode" variant="secondary" size="sm">{{ decodeLabel }}</Button>
             </div>
+        </div>
+
+        <div class="flex flex-col">
+            <div class="flex items-center justify-between mb-1">
+                <label class="block text-sm font-medium text-gray-700">输出</label>
+                <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
+            </div>
+            <textarea v-model="currentOutput"  readonly :placeholder="outputPlaceholder"
+                class="min-h-50 w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
         </div>
     </div>
     `,

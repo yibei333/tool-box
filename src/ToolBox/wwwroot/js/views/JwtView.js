@@ -1,113 +1,118 @@
 const JwtView = {
     template: `
-    <div class="space-y-6">
-        <div class="glass rounded-2xl p-6 shadow-xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
-                <span class="text-indigo-700">🔑</span>
-                <span>JWT工具</span>
-            </h2>
+    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+        <span class="text-indigo-700">🔑</span>
+        <span>JWT工具</span>
+    </h2>
 
-            <div class="flex space-x-2 mb-6 border-b border-gray-200 pb-3">
-                <button @click="activeTab = 'generate'"
-                    :class="['px-4 py-2 text-sm rounded-t-lg', activeTab === 'generate' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">生成Token</button>
-                <button @click="activeTab = 'parse'"
-                    :class="['px-4 py-2 text-sm rounded-t-lg', activeTab === 'parse' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">解析Token</button>
+    <!-- Desktop tabs -->
+    <div class="hidden lg:flex space-x-2 mb-2 border-b border-gray-200 pb-3">
+        <button @click="activeTab = 'generate'"
+            :class="['px-4 py-2 text-sm rounded-t-lg', activeTab === 'generate' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">生成Token</button>
+        <button @click="activeTab = 'parse'"
+            :class="['px-4 py-2 text-sm rounded-t-lg', activeTab === 'parse' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">解析Token</button>
+    </div>
+    <!-- Mobile dropdown -->
+    <div class="lg:hidden mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-2">选择操作</label>
+        <select v-model="activeTab" class=" rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 outline-none">
+            <option value="generate">生成Token</option>
+            <option value="parse">解析Token</option>
+        </select>
+    </div>
+
+    <!-- Generate -->
+    <div v-if="activeTab === 'generate'" class="flex flex-col gap-2">
+        <div>
+            <label class="block mb-2 text-sm text-gray-700">算法</label>
+            <select v-model="genAlgorithm"
+                class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                <option value="HS256">HS256 (HMAC)</option>
+                <option value="RS256">RS256 (RSA)</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">Payload (JSON)</label>
+            <textarea v-model="genPayload" rows="6" placeholder='{"sub":"1234567890","name":"John"}'
+                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+        </div>
+
+        <div v-if="genAlgorithm === 'HS256'">
+            <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">密钥</label>
+            <input type="text" v-model="genSecret" placeholder="输入HMAC密钥"
+                class=" rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+        </div>
+
+        <div v-if="genAlgorithm === 'RS256'">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">RSA私钥(PEM)</label>
+                <textarea v-model="genRsaKey" rows="5" placeholder="粘贴PEM私钥..."
+                    class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-y"></textarea>
             </div>
-
-            <!-- Generate -->
-            <div v-if="activeTab === 'generate'" class="space-y-4">
-                <div class="flex items-center space-x-4">
-                    <label class="text-sm text-gray-700">算法:</label>
-                    <select v-model="genAlgorithm"
-                        class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                        <option value="HS256">HS256 (HMAC)</option>
-                        <option value="RS256">RS256 (RSA)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Payload (JSON)</label>
-                    <textarea v-model="genPayload" rows="6" placeholder='{"sub":"1234567890","name":"John"}'
-                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
-                </div>
-
-                <div v-if="genAlgorithm === 'HS256'">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
-                    <input type="text" v-model="genSecret" placeholder="输入HMAC密钥"
-                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
-                </div>
-
-                <div v-if="genAlgorithm === 'RS256'" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">RSA私钥(PEM)</label>
-                        <textarea v-model="genRsaKey" rows="5" placeholder="粘贴PEM私钥..."
-                            class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-y"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">密钥密码（可选）</label>
-                        <input type="password" v-model="genRsaPassword" placeholder="私钥密码"
-                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
-                    </div>
-                </div>
-
-                <Button @click="generate" variant="primary">生成</Button>
-
-                <div v-if="genResult">
-                    <div class="flex items-center justify-between mb-1">
-                        <label class="text-sm font-medium text-gray-700">Token</label>
-                        <CopyButton :text="genResult"></CopyButton>
-                    </div>
-                    <textarea v-model="genResult" rows="4" readonly
-                        class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
-                </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">密钥密码（可选）</label>
+                <input type="password" v-model="genRsaPassword" placeholder="私钥密码"
+                    class=" rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
+        </div>
 
-            <!-- Parse -->
-            <div v-if="activeTab === 'parse'" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">JWT Token</label>
-                    <textarea v-model="parseToken" rows="4" placeholder="粘贴JWT token..."
-                        class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-y"></textarea>
-                </div>
+        <Button @click="generate" variant="primary">生成</Button>
 
-                <div class="flex items-center space-x-4">
-                    <label class="text-sm text-gray-700">验证算法:</label>
-                    <select v-model="parseAlgorithm"
-                        class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                        <option value="HS256">HS256</option>
-                        <option value="RS256">RS256</option>
-                    </select>
-                </div>
+        <div v-if="genResult">
+            <div class="flex items-center justify-between mb-1">
+                <label class="block mb-2 text-sm font-medium text-gray-700">Token</label>
+                <CopyButton :text="genResult"></CopyButton>
+            </div>
+            <textarea v-model="genResult" rows="4" readonly
+                class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
+        </div>
+    </div>
 
-                <div v-if="parseAlgorithm === 'HS256'">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
-                    <input type="text" v-model="parseSecret" placeholder="输入HMAC密钥"
-                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
-                </div>
+    <!-- Parse -->
+    <div v-if="activeTab === 'parse'" class="flex flex-col gap-2">
+        <div>
+            <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">JWT Token</label>
+            <textarea v-model="parseToken" rows="4" placeholder="粘贴JWT token..."
+                class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-y"></textarea>
+        </div>
 
-                <div v-if="parseAlgorithm === 'RS256'">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">RSA公钥(PEM)</label>
-                    <textarea v-model="parseRsaKey" rows="3" placeholder="粘贴PEM公钥..."
-                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-y"></textarea>
-                </div>
+        <div>
+            <label class="block mb-2 text-sm text-gray-700">算法</label>
+            <select v-model="parseAlgorithm"
+                class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                <option value="HS256">HS256</option>
+                <option value="RS256">RS256</option>
+            </select>
+        </div>
 
-                <Button @click="parse" variant="primary">解析/验证</Button>
+        <div v-if="parseAlgorithm === 'HS256'">
+            <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">密钥</label>
+            <input type="text" v-model="parseSecret" placeholder="输入HMAC密钥"
+                class=" rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+        </div>
 
-                <div v-if="parseResult" class="space-y-3">
-                    <div :class="['px-4 py-2 rounded-xl text-sm', parseResult.isVerified ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700']">
-                        {{ parseResult.isVerified ? '签名验证通过' : '签名验证失败' }}
-                    </div>
-                    <div v-if="parseResult.header">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Header</label>
-                        <textarea v-model="parseResult.header" rows="1" readonly
-                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
-                    </div>
-                    <div v-if="parseResult.payload">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Payload</label>
-                        <textarea v-model="parseResult.payload" rows="5" readonly
-                            class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
-                    </div>
-                </div>
+        <div v-if="parseAlgorithm === 'RS256'">
+            <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">RSA公钥(PEM)</label>
+            <textarea v-model="parseRsaKey" rows="3" placeholder="粘贴PEM公钥..."
+                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-y"></textarea>
+        </div>
+
+        <Button @click="parse" variant="primary">解析/验证</Button>
+
+        <div v-if="parseResult" class="space-y-3">
+            <div :class="['px-4 py-2 rounded-xl text-sm', parseResult.isVerified ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700']">
+                {{ parseResult.isVerified ? '签名验证通过' : '签名验证失败' }}
+            </div>
+            <div v-if="parseResult.header">
+                <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">Header</label>
+                <textarea v-model="parseResult.header" rows="1" readonly
+                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
+            </div>
+            <div v-if="parseResult.payload">
+                <label class="block mb-2 text-sm font-medium text-gray-700 mb-1">Payload</label>
+                <textarea v-model="parseResult.payload" rows="5" readonly
+                    class="w-full min-h-40 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
             </div>
         </div>
     </div>
