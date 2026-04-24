@@ -16,9 +16,7 @@ const JsonView = {
     <!-- Mobile dropdown -->
     <div class="lg:hidden mb-2">
         <label class="block text-sm font-medium text-gray-700 mb-2">选择操作</label>
-        <select v-model="activeTab" class=" rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 outline-none">
-            <option v-for="tab in tabs" :key="tab.key" :value="tab.key">{{ tab.label }}</option>
-        </select>
+        <SingleSelect v-model="activeTab" :options="tabs.map(t => ({ value: t.key, label: t.label }))" size="md"></SingleSelect>
     </div>
 
     <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6">

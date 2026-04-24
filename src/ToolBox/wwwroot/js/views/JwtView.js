@@ -15,21 +15,14 @@ const JwtView = {
     <!-- Mobile dropdown -->
     <div class="lg:hidden mb-2">
         <label class="block text-sm font-medium text-gray-700 mb-2">选择操作</label>
-        <select v-model="activeTab" class=" rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 outline-none">
-            <option value="generate">生成Token</option>
-            <option value="parse">解析Token</option>
-        </select>
+        <SingleSelect v-model="activeTab" :options="[{value:'generate',label:'生成Token'},{value:'parse',label:'解析Token'}]" size="md"></SingleSelect>
     </div>
 
     <!-- Generate -->
     <div v-if="activeTab === 'generate'" class="flex flex-col gap-2">
         <div>
             <label class="block mb-2 text-sm text-gray-700">算法</label>
-            <select v-model="genAlgorithm"
-                class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                <option value="HS256">HS256 (HMAC)</option>
-                <option value="RS256">RS256 (RSA)</option>
-            </select>
+            <SingleSelect v-model="genAlgorithm" :options="[{value:'HS256',label:'HS256 (HMAC)'},{value:'RS256',label:'RS256 (RSA)'}]" size="md"></SingleSelect>
         </div>
 
         <div>
@@ -79,11 +72,7 @@ const JwtView = {
 
         <div>
             <label class="block mb-2 text-sm text-gray-700">算法</label>
-            <select v-model="parseAlgorithm"
-                class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                <option value="HS256">HS256</option>
-                <option value="RS256">RS256</option>
-            </select>
+            <SingleSelect v-model="parseAlgorithm" :options="[{value:'HS256',label:'HS256'},{value:'RS256',label:'RS256'}]" size="md"></SingleSelect>
         </div>
 
         <div v-if="parseAlgorithm === 'HS256'">

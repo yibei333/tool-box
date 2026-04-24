@@ -142,4 +142,5 @@ const app = createApp(App);
 app.use(router);
 app.component('Button', Button);
 app.component('CopyButton', CopyButton);
+app.component('SingleSelect', SingleSelect);
 app.mount('#app');

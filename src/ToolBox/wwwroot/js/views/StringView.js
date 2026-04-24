@@ -15,9 +15,7 @@ const StringView = {
     <!-- Mobile dropdown -->
     <div class="lg:hidden mb-2">
         <label class="block text-sm font-medium text-gray-700 mb-2">选择操作</label>
-        <select v-model="activeTab" class="rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 outline-none">
-            <option v-for="tab in tabs" :key="tab.key" :value="tab.key">{{ tab.label }}</option>
-        </select>
+        <SingleSelect v-model="activeTab" :options="tabs.map(t => ({ value: t.key, label: t.label }))" size="md"></SingleSelect>
     </div>
 
     <!-- Diff -->
@@ -91,15 +89,8 @@ const StringView = {
         <div class="flex flex-col items-start lg:flex-row lg:items-center gap-2">
             <div class="flex gap-2 items-center">
                 <label class="block text-sm text-gray-700 mb-1">字符集</label>
-                <select v-model="randomCharSet"
-                    class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="number">纯数字</option>
-                    <option value="letter_lower">小写字母</option>
-                    <option value="letter_upper">大写字母</option>
-                    <option value="letter">字母</option>
-                    <option value="number_and_letter">数字+字母</option>
-                    <option value="mix">混合(含特殊字符)</option>
-                </select>
+                <SingleSelect v-model="randomCharSet"
+                    :options="[{value:'number',label:'纯数字'},{value:'letter_lower',label:'小写字母'},{value:'letter_upper',label:'大写字母'},{value:'letter',label:'字母'},{value:'number_and_letter',label:'数字+字母'},{value:'mix',label:'混合(含特殊字符)'}]" size="md"></SingleSelect>
             </div>
             <div class="flex gap-2 items-center">
                 <label class="block text-sm text-gray-700 mb-1">长度</label>

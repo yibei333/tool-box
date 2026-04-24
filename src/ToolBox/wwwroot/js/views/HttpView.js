@@ -7,10 +7,7 @@ const HttpView = {
 
     <div class="flex-1 flex flex-col gap-2">
         <div class="flex flex-col lg:flex-row lg:items-center gap-2">
-            <select v-model="method"
-                class="rounded-xl border border-gray-300 px-3 py-2.5 text-sm font-bold focus:border-indigo-500 outline-none">
-                <option v-for="m in methods" :key="m" :value="m">{{ m }}</option>
-            </select>
+            <SingleSelect v-model="method" :options="methods.map(m => ({ value: m, label: m }))" size="md"></SingleSelect>
             <input type="text" v-model="url" placeholder="https://example.com/api"
                 class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             <Button @click="send" variant="primary" :disabled="loading">{{ loading ? '请求中...' : '发送' }}</Button>
@@ -37,22 +34,13 @@ const HttpView = {
         <div v-if="method !== 'GET'">
             <div class="flex flex-col lg:flex-row lg:items-center lg:space-y-0 lg:space-x-4 mb-2">
                 <label class="text-sm font-medium text-gray-700">请求体</label>
-                <select v-model="contentType"
-                    class="rounded-xl border border-gray-300 px-3 py-1.5 text-xs focus:border-indigo-500 outline-none">
-                    <option value="application/json">application/json</option>
-                    <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
-                    <option value="multipart/form-data">multipart/form-data</option>
-                    <option value="text/plain">text/plain</option>
-                    <option value="text/xml">text/xml</option>
-                </select>
+                <SingleSelect v-model="contentType"
+                    :options="[{value:'application/json',label:'application/json'},{value:'application/x-www-form-urlencoded',label:'application/x-www-form-urlencoded'},{value:'multipart/form-data',label:'multipart/form-data'},{value:'text/plain',label:'text/plain'},{value:'text/xml',label:'text/xml'}]"></SingleSelect>
             </div>
             <div v-if="contentType === 'multipart/form-data' || contentType === 'application/x-www-form-urlencoded'">
                 <div v-for="(f, i) in formFields" :key="i" class="flex gap-1 mb-2">
-                    <select v-if="contentType === 'multipart/form-data'" v-model="f.type"
-                        class="rounded-xl border border-gray-300 px-2 py-2 text-xs focus:border-indigo-500 outline-none">
-                        <option value="text">文本</option>
-                        <option value="file">文件</option>
-                    </select>
+                    <SingleSelect v-if="contentType === 'multipart/form-data'" v-model="f.type"
+                        :options="[{value:'text',label:'文本'},{value:'file',label:'文件'}]"></SingleSelect>
                     <input type="text" v-model="f.key" placeholder="字段名"
                         class="flex-1 min-w-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
                     <input v-if="f.type === 'text' || contentType === 'application/x-www-form-urlencoded'" type="text" v-model="f.value" placeholder="字段值"

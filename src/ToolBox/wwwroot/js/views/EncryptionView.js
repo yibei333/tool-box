@@ -19,12 +19,7 @@ const EncryptionView = {
     <!-- Mobile dropdown for main tabs -->
     <div class="lg:hidden mb-2">
         <label class="block text-sm font-medium text-gray-700 mb-2">选择加密算法</label>
-        <select v-model="mainTab" class="rounded-xl border border-gray-300 px-2 py-1 text-sm focus:border-indigo-500 outline-none">
-            <option value="rsa">RSA 非对称</option>
-            <option value="aes">AES 对称</option>
-            <option value="des">DES 对称</option>
-            <option value="3des">3DES 对称</option>
-        </select>
+        <SingleSelect v-model="mainTab" :options="[{value:'rsa',label:'RSA 非对称'},{value:'aes',label:'AES 对称'},{value:'des',label:'DES 对称'},{value:'3des',label:'3DES 对称'}]" size="md"></SingleSelect>
     </div>
 
     <!-- RSA Section -->
@@ -37,20 +32,14 @@ const EncryptionView = {
         <!-- Mobile dropdown for RSA subtabs -->
         <div class="lg:hidden mb-2">
             <label class="block text-sm font-medium text-gray-700 mb-2">选择RSA操作</label>
-            <select v-model="rsaTab" class="rounded-xl border border-gray-300 px-2 py-1 text-sm focus:border-indigo-500 outline-none">
-                <option v-for="t in rsaTabs" :key="t.key" :value="t.key">{{ t.label }}</option>
-            </select>
+            <SingleSelect v-model="rsaTab" :options="rsaTabs.map(t => ({ value: t.key, label: t.label }))" size="md"></SingleSelect>
         </div>
 
         <!-- RSA Generate -->
         <div v-if="rsaTab === 'generate'" class="flex-1 flex flex-col gap-2">
             <div class="flex flex-col lg:items-center items-stretch lg:flex-row gap-2">
                 <label class="text-sm text-gray-700">密钥长度:</label>
-                <select v-model="rsaKeySize"
-                    class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option :value="2048">2048</option>
-                    <option :value="4096">4096</option>
-                </select>
+                <SingleSelect v-model="rsaKeySize" :options="[{value:2048,label:'2048'},{value:4096,label:'4096'}]" size="md"></SingleSelect>
                 <Button @click="rsaGenerate" variant="primary" size="sm">生成密钥对</Button>
             </div>
             <div class="flex-1 flex flex-col lg:flex-row gap-2">
@@ -116,12 +105,7 @@ const EncryptionView = {
             </div>
             <div class="flex flex-col items-start lg:flex-row lg:items-center gap-2">
                 <label class="text-sm text-gray-700">目标格式:</label>
-                <select v-model="convertTarget"
-                    class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="pkcs1">PKCS#1</option>
-                    <option value="pkcs8">PKCS#8</option>
-                    <option value="public">公钥(X.509)</option>
-                </select>
+                <SingleSelect v-model="convertTarget" :options="[{value:'pkcs1',label:'PKCS#1'},{value:'pkcs8',label:'PKCS#8'},{value:'public',label:'公钥(X.509)'}]" size="md"></SingleSelect>
                 <Button @click="rsaConvertPem" variant="primary" size="sm">转换</Button>
             </div>
         </div>
@@ -167,11 +151,7 @@ const EncryptionView = {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">目标格式</label>
-                        <select v-model="rsaXmlTargetFormat" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                            <option value="pkcs1">PKCS#1</option>
-                            <option value="pkcs8">PKCS#8</option>
-                            <option value="public">公钥(X.509)</option>
-                        </select>
+                        <SingleSelect v-model="rsaXmlTargetFormat" :options="[{value:'pkcs1',label:'PKCS#1'},{value:'pkcs8',label:'PKCS#8'},{value:'public',label:'公钥(X.509)'}]" size="md"></SingleSelect>
                     </div>
                 </div>
                 <Button @click="rsaConvertFromXml" variant="primary" size="sm">转换为PEM</Button>
@@ -210,17 +190,11 @@ const EncryptionView = {
                             </div>
                             <div class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">加密类型</label>
-                                <select v-model="rsaPasswordTargetEncryptedType" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                                    <option value="EncryptedPkcs8PrivateKey">Encrypted PKCS#8</option>
-                                    <option value="EncryptedPkcs1PrivateKey">Encrypted PKCS#1</option>
-                                </select>
+                                <SingleSelect v-model="rsaPasswordTargetEncryptedType" :options="[{value:'EncryptedPkcs8PrivateKey',label:'Encrypted PKCS#8'},{value:'EncryptedPkcs1PrivateKey',label:'Encrypted PKCS#1'}]" size="md"></SingleSelect>
                             </div>
                             <div v-if="rsaPasswordTargetEncryptedType==='EncryptedPkcs1PrivateKey'" class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">算法</label>
-                                <select v-model="rsaPasswordAlgorithm" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                                    <option value="AES-256-CBC">AES-256-CBC</option>
-                                    <option value="DES-EDE3-CBC">DES-EDE3-CBC</option>
-                                </select>
+                                <SingleSelect v-model="rsaPasswordAlgorithm" :options="[{value:'AES-256-CBC',label:'AES-256-CBC'},{value:'DES-EDE3-CBC',label:'DES-EDE3-CBC'}]" size="md"></SingleSelect>
                             </div>
                         </div>
                         <Button @click="rsaAddPassword" variant="primary" size="sm">添加密码</Button>
@@ -279,13 +253,7 @@ const EncryptionView = {
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">填充模式</label>
-                    <select v-model="rsaEncPadding" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                        <option value="OAEP-SHA256">OAEP-SHA256</option>
-                        <option value="OAEP-SHA384">OAEP-SHA384</option>
-                        <option value="OAEP-SHA512">OAEP-SHA512</option>
-                        <option value="OAEP-SHA1">OAEP-SHA1</option>
-                        <option value="PKCS1">PKCS1</option>
-                    </select>
+                    <SingleSelect v-model="rsaEncPadding" :options="[{value:'OAEP-SHA256',label:'OAEP-SHA256'},{value:'OAEP-SHA384',label:'OAEP-SHA384'},{value:'OAEP-SHA512',label:'OAEP-SHA512'},{value:'OAEP-SHA1',label:'OAEP-SHA1'},{value:'PKCS1',label:'PKCS1'}]" size="md"></SingleSelect>
                 </div>
                 <Button @click="rsaEncrypt" variant="primary" size="sm">加密</Button>
             </div>
@@ -315,13 +283,7 @@ const EncryptionView = {
                 <div class="flex flex-col lg:flex-row gap-2">
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">填充模式</label>
-                        <select v-model="rsaDecPadding" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                            <option value="OAEP-SHA256">OAEP-SHA256</option>
-                            <option value="OAEP-SHA384">OAEP-SHA384</option>
-                            <option value="OAEP-SHA512">OAEP-SHA512</option>
-                            <option value="OAEP-SHA1">OAEP-SHA1</option>
-                            <option value="PKCS1">PKCS1</option>
-                        </select>
+                        <SingleSelect v-model="rsaDecPadding" :options="[{value:'OAEP-SHA256',label:'OAEP-SHA256'},{value:'OAEP-SHA384',label:'OAEP-SHA384'},{value:'OAEP-SHA512',label:'OAEP-SHA512'},{value:'OAEP-SHA1',label:'OAEP-SHA1'},{value:'PKCS1',label:'PKCS1'}]" size="md"></SingleSelect>
                     </div>
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">密码（当私钥有密码保护时传入）</label>
@@ -357,19 +319,11 @@ const EncryptionView = {
                 <div class="flex flex-col lg:flex-row gap-2">
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">哈希算法</label>
-                        <select v-model="rsaSignHashAlgorithm" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                            <option value="SHA256">SHA256</option>
-                            <option value="SHA384">SHA384</option>
-                            <option value="SHA512">SHA512</option>
-                            <option value="SHA1">SHA1</option>
-                        </select>
+                        <SingleSelect v-model="rsaSignHashAlgorithm" :options="[{value:'SHA256',label:'SHA256'},{value:'SHA384',label:'SHA384'},{value:'SHA512',label:'SHA512'},{value:'SHA1',label:'SHA1'}]" size="md"></SingleSelect>
                     </div>
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">填充模式</label>
-                        <select v-model="rsaSignPadding" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                            <option value="PKCS1">PKCS1</option>
-                            <option value="PSS">PSS</option>
-                        </select>
+                        <SingleSelect v-model="rsaSignPadding" :options="[{value:'PKCS1',label:'PKCS1'},{value:'PSS',label:'PSS'}]" size="md"></SingleSelect>
                     </div>
                 </div>
                 <Button @click="rsaSign" variant="primary" size="sm">签名</Button>
@@ -405,19 +359,11 @@ const EncryptionView = {
                 <div class="flex flex-col lg:flex-row gap-2">
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">哈希算法</label>
-                        <select v-model="rsaVerifySignHashAlgorithm" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                            <option value="SHA256">SHA256</option>
-                            <option value="SHA384">SHA384</option>
-                            <option value="SHA512">SHA512</option>
-                            <option value="SHA1">SHA1</option>
-                        </select>
+                        <SingleSelect v-model="rsaVerifySignHashAlgorithm" :options="[{value:'SHA256',label:'SHA256'},{value:'SHA384',label:'SHA384'},{value:'SHA512',label:'SHA512'},{value:'SHA1',label:'SHA1'}]" size="md"></SingleSelect>
                     </div>
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">填充模式</label>
-                        <select v-model="rsaVerifySignPadding" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                            <option value="PKCS1">PKCS1</option>
-                            <option value="PSS">PSS</option>
-                        </select>
+                        <SingleSelect v-model="rsaVerifySignPadding" :options="[{value:'PKCS1',label:'PKCS1'},{value:'PSS',label:'PSS'}]" size="md"></SingleSelect>
                     </div>
                 </div>
                 <Button @click="rsaVerifySign" variant="primary" size="sm">验签</Button>
@@ -449,21 +395,11 @@ const EncryptionView = {
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">模式</label>
-                <select v-model="aesMode" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="CBC">CBC</option>
-                    <option value="ECB">ECB</option>
-                    <option value="CFB">CFB</option>
-                </select>
+                <SingleSelect v-model="aesMode" :options="[{value:'CBC',label:'CBC'},{value:'ECB',label:'ECB'},{value:'CFB',label:'CFB'}]" size="md"></SingleSelect>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">填充</label>
-                <select v-model="aesPadding" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="PKCS7">PKCS7</option>
-                    <option value="Zeros">Zeros</option>
-                    <option value="ANSIX923">ANSIX923</option>
-                    <option value="ISO10126">ISO10126</option>
-                    <option value="None">None</option>
-                </select>
+                <SingleSelect v-model="aesPadding" :options="[{value:'PKCS7',label:'PKCS7'},{value:'Zeros',label:'Zeros'},{value:'ANSIX923',label:'ANSIX923'},{value:'ISO10126',label:'ISO10126'},{value:'None',label:'None'}]" size="md"></SingleSelect>
             </div>
             <div class="flex-1 flex flex-col gap-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
@@ -500,21 +436,11 @@ const EncryptionView = {
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">模式</label>
-                <select v-model="desMode" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="CBC">CBC</option>
-                    <option value="ECB">ECB</option>
-                    <option value="CFB">CFB</option>
-                </select>
+                <SingleSelect v-model="desMode" :options="[{value:'CBC',label:'CBC'},{value:'ECB',label:'ECB'},{value:'CFB',label:'CFB'}]" size="md"></SingleSelect>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">填充</label>
-                <select v-model="desPadding" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="PKCS7">PKCS7</option>
-                    <option value="Zeros">Zeros</option>
-                    <option value="ANSIX923">ANSIX923</option>
-                    <option value="ISO10126">ISO10126</option>
-                    <option value="None">None</option>
-                </select>
+                <SingleSelect v-model="desPadding" :options="[{value:'PKCS7',label:'PKCS7'},{value:'Zeros',label:'Zeros'},{value:'ANSIX923',label:'ANSIX923'},{value:'ISO10126',label:'ISO10126'},{value:'None',label:'None'}]" size="md"></SingleSelect>
             </div>
             <div class="flex-1 flex flex-col gap-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
@@ -551,21 +477,11 @@ const EncryptionView = {
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">模式</label>
-                <select v-model="tripleDesMode" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="CBC">CBC</option>
-                    <option value="ECB">ECB</option>
-                    <option value="CFB">CFB</option>
-                </select>
+                <SingleSelect v-model="tripleDesMode" :options="[{value:'CBC',label:'CBC'},{value:'ECB',label:'ECB'},{value:'CFB',label:'CFB'}]" size="md"></SingleSelect>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">填充</label>
-                <select v-model="tripleDesPadding" class="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
-                    <option value="PKCS7">PKCS7</option>
-                    <option value="Zeros">Zeros</option>
-                    <option value="ANSIX923">ANSIX923</option>
-                    <option value="ISO10126">ISO10126</option>
-                    <option value="None">None</option>
-                </select>
+                <SingleSelect v-model="tripleDesPadding" :options="[{value:'PKCS7',label:'PKCS7'},{value:'Zeros',label:'Zeros'},{value:'ANSIX923',label:'ANSIX923'},{value:'ISO10126',label:'ISO10126'},{value:'None',label:'None'}]" size="md"></SingleSelect>
             </div>
             <div class="flex-1 flex flex-col gap-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
