@@ -17,7 +17,7 @@ const navItems = [
 const App = {
     components: { Button },
     template: `
-    <div class="h-screen gradient-bg flex flex-col lg:flex-row">
+    <div class="h-full gradient-bg flex flex-col lg:flex-row">
         <!-- Mobile header -->
         <header class="block lg:hidden glass border-b border-gray-200 sticky top-0 z-30">
             <div class="flex items-center justify-between p-2">
@@ -92,8 +92,8 @@ const App = {
         </aside>
 
         <!-- Main content -->
-        <main class="flex-1 p-4 lg:p-8 flex flex-col overflow-hidden">
-            <div class="flex-1 glass rounded p-6 shadow-xl flex flex-col overflow-y-auto">
+        <main class="flex-1 p-2 lg:p-8 flex flex-col overflow-hidden">
+            <div class="flex-1 glass rounded p-2 lg:p-6 shadow-xl flex flex-col overflow-y-auto">
                 <router-view v-slot="{ Component }">
                     <keep-alive>
                         <component :is="Component" />
