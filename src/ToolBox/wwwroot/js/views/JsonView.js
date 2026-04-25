@@ -8,7 +8,7 @@ const JsonView = {
     <!-- Desktop tabs -->
     <div class="hidden lg:flex space-x-2 mb-2 border-b border-gray-200 pb-3">
         <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
-            :class="['px-4 py-2 text-sm rounded-t-lg',
+            :class="['px-4 py-2 text-sm rounded',
                      activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
             {{ tab.label }}
         </button>
@@ -24,13 +24,13 @@ const JsonView = {
             <div class="flex-1 flex flex-col gap-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">{{ inputLabel }}</label>
                 <textarea v-model="currentInput" :placeholder="inputPlaceholder"
-                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
 
             <div v-if="activeTab === 'to-csharp'" class="flex items-center space-x-2">
                 <label class="text-sm text-gray-700">根类名:</label>
                 <input type="text" v-model="rootName" placeholder="Root"
-                    class="w-40 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                    class="w-40 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
             </div>
 
             <Button @click="execute" variant="primary">{{ executeLabel }}</Button>
@@ -42,7 +42,7 @@ const JsonView = {
                 <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
             </div>
             <textarea v-model="currentOutput" readonly :placeholder="outputPlaceholder"
-                class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 focus:border-indigo-500 outline-none resize-none"></textarea>
+                class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 focus:border-indigo-500 outline-none resize-none"></textarea>
         </div>
     </div>
     `,

@@ -6,7 +6,7 @@ const GuidView = {
     </h2>
 
     <div class="flex py-2">
-        <div class="flex gap-2 p-2 border rounded-xl border-gray-300 items-center">
+        <div class="flex gap-2 p-2 border rounded border-gray-300 items-center">
             <label class="text-sm text-gray-700">00000000-0000-0000-0000-000000000000</label>
             <CopyButton :text="'00000000-0000-0000-0000-000000000000'"></CopyButton>
         </div>
@@ -39,13 +39,13 @@ const GuidView = {
         <div class="flex flex-col lg:flex-row lg:items-center gap-2">
             <label class="text-sm text-gray-700">生成数量</label>
             <input type="number" v-model.number="count" min="1" max="100"
-                class="w-24 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                class="w-24 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
             <Button @click="generate" variant="primary">生成</Button>
         </div>
 
         <div v-if="guids.length" class="space-y-1">
             <div v-for="(g, i) in guids" :key="i"
-                class="flex items-center space-x-2 bg-gray-50 rounded-lg px-3 py-2">
+                class="flex items-center space-x-2 bg-gray-50 rounded px-3 py-2">
                 <code class="mono text-sm flex-1 select-all">{{ g }}</code>
                 <CopyButton :text="g"></CopyButton>
             </div>

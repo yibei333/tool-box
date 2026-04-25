@@ -8,13 +8,13 @@ const EncryptionView = {
     <!-- Main tabs for desktop -->
     <div class="hidden lg:flex space-x-2 mb-2 border-b border-gray-200 pb-3">
         <button @click="mainTab = 'rsa'"
-            :class="['px-4 py-2 text-sm rounded-t-lg', mainTab === 'rsa' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">RSA 非对称</button>
+            :class="['px-4 py-2 text-sm rounded', mainTab === 'rsa' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">RSA 非对称</button>
         <button @click="mainTab = 'aes'"
-            :class="['px-4 py-2 text-sm rounded-t-lg', mainTab === 'aes' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">AES 对称</button>
+            :class="['px-4 py-2 text-sm rounded', mainTab === 'aes' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">AES 对称</button>
         <button @click="mainTab = 'des'"
-            :class="['px-4 py-2 text-sm rounded-t-lg', mainTab === 'des' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">DES 对称</button>
+            :class="['px-4 py-2 text-sm rounded', mainTab === 'des' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">DES 对称</button>
         <button @click="mainTab = '3des'"
-            :class="['px-4 py-2 text-sm rounded-t-lg', mainTab === '3des' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">3DES 对称</button>
+            :class="['px-4 py-2 text-sm rounded', mainTab === '3des' ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">3DES 对称</button>
     </div>
     <!-- Mobile dropdown for main tabs -->
     <div class="lg:hidden mb-2">
@@ -27,7 +27,7 @@ const EncryptionView = {
         <!-- RSA subtabs for desktop -->
         <div class="hidden lg:flex space-x-2 mb-4 border-b border-gray-100 pb-2">
             <button v-for="t in rsaTabs" :key="t.key" @click="rsaTab = t.key"
-                :class="['px-3 py-1.5 text-xs rounded-lg', rsaTab === t.key ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">{{ t.label }}</button>
+                :class="['px-3 py-1.5 text-xs rounded', rsaTab === t.key ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">{{ t.label }}</button>
         </div>
         <!-- Mobile dropdown for RSA subtabs -->
         <div class="lg:hidden mb-2">
@@ -49,7 +49,7 @@ const EncryptionView = {
                         <CopyButton v-if="rsaKeys.privateKey" :text="rsaKeys.privateKey"></CopyButton>
                     </div>
                     <textarea v-model="rsaKeys.privateKey" readonly placeholder="私钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <div class="flex items-center gap-2">
@@ -57,7 +57,7 @@ const EncryptionView = {
                         <CopyButton v-if="rsaKeys.publicKey" :text="rsaKeys.publicKey"></CopyButton>
                     </div>
                     <textarea v-model="rsaKeys.publicKey" readonly placeholder="公钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-none"></textarea>
                 </div>
             </div>
         </div>
@@ -68,16 +68,16 @@ const EncryptionView = {
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">私钥</label>
                     <textarea v-model="comparePrivate" placeholder="粘贴PEM私钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">公钥</label>
                     <textarea v-model="comparePublic" placeholder="粘贴PEM公钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
             </div>
             <Button @click="rsaCompare" variant="primary" size="sm">比对</Button>
-            <div class="rounded-xl border px-4 py-3 flex items-center justify-center"
+            <div class="rounded border px-4 py-3 flex items-center justify-center"
                 :class="compareResult === null ? 'bg-gray-50' : (compareResult ? 'bg-green-50' : 'bg-red-50')">
                 <span v-if="compareResult === null" class="text-gray-400 text-sm">点击比对按钮查看结果</span>
                 <span v-else :class="compareResult ? 'text-green-600' : 'text-red-600'" class="font-medium">
@@ -92,7 +92,7 @@ const EncryptionView = {
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">PEM密钥</label>
                     <textarea v-model="convertPem" placeholder="粘贴PEM密钥..."
-                            class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                            class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <div class="flex items-center justify-between">
@@ -100,7 +100,7 @@ const EncryptionView = {
                         <CopyButton v-if="convertResult" :text="convertResult"></CopyButton>
                     </div>
                     <textarea v-model="convertResult" readonly placeholder="转换结果..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-none"></textarea>
                 </div>
             </div>
             <div class="flex flex-col items-start lg:flex-row lg:items-center gap-2">
@@ -113,8 +113,8 @@ const EncryptionView = {
         <!-- RSA XML Convert -->
         <div v-if="rsaTab === 'xml-convert'" class="flex-1 flex flex-col gap-2">
             <div class="flex space-x-2 mb-4 border-b border-gray-100 pb-2">
-                <button @click="xmlConvertDirection = 'pem-to-xml'" :class="['px-3 py-1.5 text-xs rounded-lg', xmlConvertDirection === 'pem-to-xml' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">PEM → XML</button>
-                <button @click="xmlConvertDirection = 'xml-to-pem'" :class="['px-3 py-1.5 text-xs rounded-lg', xmlConvertDirection === 'xml-to-pem' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">XML → PEM</button>
+                <button @click="xmlConvertDirection = 'pem-to-xml'" :class="['px-3 py-1.5 text-xs rounded', xmlConvertDirection === 'pem-to-xml' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">PEM → XML</button>
+                <button @click="xmlConvertDirection = 'xml-to-pem'" :class="['px-3 py-1.5 text-xs rounded', xmlConvertDirection === 'xml-to-pem' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">XML → PEM</button>
             </div>
 
             <!-- PEM to XML -->
@@ -123,7 +123,7 @@ const EncryptionView = {
                     <div class="flex-1 flex flex-col">
                         <label class="block text-sm font-medium text-gray-700 mb-1">PEM密钥</label>
                         <textarea v-model="rsaXmlPem" placeholder="粘贴PEM密钥..."
-                            class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                            class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -137,7 +137,7 @@ const EncryptionView = {
                         <CopyButton v-if="rsaXmlResult" :text="rsaXmlResult"></CopyButton>
                     </div>
                     <textarea v-model="rsaXmlResult" readonly placeholder="XML结果..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none break-all"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none break-all"></textarea>
                 </div>
             </div>
 
@@ -147,7 +147,7 @@ const EncryptionView = {
                     <div class="flex-1 flex flex-col">
                         <label class="block text-sm font-medium text-gray-700 mb-1">XML密钥</label>
                         <textarea v-model="rsaXmlXml" placeholder="粘贴XML密钥..."
-                            class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none break-all"></textarea>
+                            class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none break-all"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">目标格式</label>
@@ -161,7 +161,7 @@ const EncryptionView = {
                         <CopyButton v-if="rsaXmlFromXmlResult" :text="rsaXmlFromXmlResult"></CopyButton>
                     </div>
                     <textarea v-model="rsaXmlFromXmlResult" readonly placeholder="PEM结果..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                 </div>
             </div>
         </div>
@@ -169,8 +169,8 @@ const EncryptionView = {
         <!-- RSA Password Operations -->
         <div v-if="rsaTab === 'password'" class="flex-1 flex flex-col gap-2">
             <div class="flex space-x-2 mb-4 border-b border-gray-100 pb-2">
-                <button @click="passwordOperation = 'add'" :class="['px-3 py-1.5 text-xs rounded-lg', passwordOperation === 'add' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">添加密码</button>
-                <button @click="passwordOperation = 'remove'" :class="['px-3 py-1.5 text-xs rounded-lg', passwordOperation === 'remove' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">移除密码</button>
+                <button @click="passwordOperation = 'add'" :class="['px-3 py-1.5 text-xs rounded', passwordOperation === 'add' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">添加密码</button>
+                <button @click="passwordOperation = 'remove'" :class="['px-3 py-1.5 text-xs rounded', passwordOperation === 'remove' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-50']">移除密码</button>
             </div>
 
             <!-- Add Password -->
@@ -180,13 +180,13 @@ const EncryptionView = {
                         <div class="flex-1 flex flex-col gap-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">PEM密钥</label>
                             <textarea v-model="rsaPasswordPem" placeholder="粘贴PEM密钥..."
-                                class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                                class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <div class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
                                 <input type="text" v-model="rsaPasswordPassword" placeholder="输入密码"
-                                    class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                                    class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
                             </div>
                             <div class="flex-1 flex flex-col">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">加密类型</label>
@@ -205,7 +205,7 @@ const EncryptionView = {
                             <CopyButton v-if="rsaPasswordResult" :text="rsaPasswordResult"></CopyButton>
                         </div>
                         <textarea v-model="rsaPasswordResult" readonly placeholder="加密后的密钥..."
-                            class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                            class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                     </div>
                 </div>
             </div>
@@ -217,12 +217,12 @@ const EncryptionView = {
                         <div class="flex-1 flex flex-col gap-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">加密的PEM密钥</label>
                             <textarea v-model="rsaRemoveEncryptedPem" placeholder="粘贴加密的PEM密钥..."
-                                class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                                class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                         </div>
                         <div class="flex flex-col">
                             <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
                             <input type="text" v-model="rsaRemovePwd" placeholder="输入密码"
-                            class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                            class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
                         </div>
                         <Button @click="rsaDoRemovePassword" variant="primary" size="sm">移除密码</Button>
                     </div>
@@ -232,7 +232,7 @@ const EncryptionView = {
                             <CopyButton v-if="rsaRemoveResult" :text="rsaRemoveResult"></CopyButton>
                         </div>
                         <textarea v-model="rsaRemoveResult" readonly placeholder="解密后的密钥..."
-                            class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                            class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
                     </div>
                 </div>
             </div>
@@ -244,12 +244,12 @@ const EncryptionView = {
                 <div class="flex-1 flex flex-col">
                     <label class="block text-sm font-medium text-gray-700 mb-1">公钥</label>
                     <textarea v-model="rsaEncPublic" placeholder="粘贴PEM公钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">明文</label>
                     <textarea v-model="rsaEncPlaintext" placeholder="输入明文..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">填充模式</label>
@@ -263,7 +263,7 @@ const EncryptionView = {
                     <CopyButton v-if="rsaEncResult" :text="rsaEncResult"></CopyButton>
                 </div>
                 <textarea v-model="rsaEncResult" readonly placeholder="加密结果..."
-                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
             </div>
         </div>
 
@@ -273,12 +273,12 @@ const EncryptionView = {
                 <div class="flex-1 flex flex-col">
                     <label class="block text-sm font-medium text-gray-700 mb-1">私钥</label>
                     <textarea v-model="rsaDecPrivate" placeholder="粘贴PEM私钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">密文(Base64)</label>
                     <textarea v-model="rsaDecCiphertext" placeholder="粘贴Base64密文..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex flex-col lg:flex-row gap-2">
                     <div class="flex-1 flex flex-col gap-2">
@@ -288,7 +288,7 @@ const EncryptionView = {
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">密码（当私钥有密码保护时传入）</label>
                         <input type="text" v-model="rsaDecPassword" placeholder="密钥密码"
-                            class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                            class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
                     </div>
                 </div>
                 <Button @click="rsaDecrypt" variant="primary" size="sm">解密</Button>
@@ -299,7 +299,7 @@ const EncryptionView = {
                     <CopyButton v-if="rsaDecResult" :text="rsaDecResult"></CopyButton>
                 </div>
                 <textarea v-model="rsaDecResult" readonly placeholder="解密结果..."
-                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
             </div>
         </div>
 
@@ -309,12 +309,12 @@ const EncryptionView = {
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">私钥</label>
                     <textarea v-model="rsaSignPrivate" placeholder="粘贴PEM私钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">待签名数据</label>
                     <textarea v-model="rsaSignData" placeholder="输入待签名数据..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex flex-col lg:flex-row gap-2">
                     <div class="flex-1 flex flex-col gap-2">
@@ -334,7 +334,7 @@ const EncryptionView = {
                     <CopyButton v-if="rsaSignResult" :text="rsaSignResult"></CopyButton>
                 </div>
                 <textarea v-model="rsaSignResult" readonly placeholder="签名结果..."
-                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
             </div>
         </div>
 
@@ -344,17 +344,17 @@ const EncryptionView = {
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">公钥</label>
                     <textarea v-model="rsaVerifySignPublic" placeholder="粘贴PEM公钥..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-xs focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">原始数据</label>
                     <textarea v-model="rsaVerifySignData" placeholder="输入原始数据..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col gap-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">签名(Base64)</label>
                     <textarea v-model="rsaVerifySignSignature" placeholder="粘贴Base64签名..."
-                        class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                        class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
                 </div>
                 <div class="flex flex-col lg:flex-row gap-2">
                     <div class="flex-1 flex flex-col gap-2">
@@ -369,7 +369,7 @@ const EncryptionView = {
                 <Button @click="rsaVerifySign" variant="primary" size="sm">验签</Button>
             </div>
             <div class="flex flex-col gap-2">
-                <div class="rounded-xl border px-4 py-3 flex items-center justify-center"
+                <div class="rounded border px-4 py-3 flex items-center justify-center"
                     :class="rsaVerifySignResult === null ? 'bg-gray-50' : (rsaVerifySignResult ? 'bg-green-50' : 'bg-red-50')">
                     <span v-if="rsaVerifySignResult === null" class="text-gray-400 text-sm">点击验签按钮查看结果</span>
                     <span v-else :class="rsaVerifySignResult ? 'text-green-600' : 'text-red-600'" class="font-medium">
@@ -386,12 +386,12 @@ const EncryptionView = {
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
                 <input type="text" v-model="aesKey" placeholder="输入AES密钥"
-                    class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                    class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
             <div v-if="aesMode !== 'ECB'">
                 <label class="block text-sm font-medium text-gray-700 mb-1">IV（必需）</label>
                 <input type="text" v-model="aesIv" placeholder="输入IV"
-                    class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                    class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">模式</label>
@@ -404,7 +404,7 @@ const EncryptionView = {
             <div class="flex-1 flex flex-col gap-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
                 <textarea v-model="aesInput" placeholder="输入明文或密文..."
-                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
             <div class="flex space-x-2">
                 <Button @click="aesEncrypt" variant="primary" size="sm">加密</Button>
@@ -417,7 +417,7 @@ const EncryptionView = {
                 <CopyButton v-if="aesResult" :text="aesResult"></CopyButton>
             </div>
             <textarea v-model="aesResult" readonly :placeholder="aesResultPlaceholder"
-                class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
         </div>
     </div>
 
@@ -427,12 +427,12 @@ const EncryptionView = {
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
                 <input type="text" v-model="desKey" placeholder="输入DES密钥"
-                    class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                    class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
             <div v-if="desMode !== 'ECB'">
                 <label class="block text-sm font-medium text-gray-700 mb-1">IV（必需）</label>
                 <input type="text" v-model="desIv" placeholder="输入IV"
-                    class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                    class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">模式</label>
@@ -445,7 +445,7 @@ const EncryptionView = {
             <div class="flex-1 flex flex-col gap-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
                 <textarea v-model="desInput" placeholder="输入明文或密文..."
-                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
             <div class="flex space-x-2">
                 <Button @click="desEncrypt" variant="primary" size="sm">加密</Button>
@@ -458,7 +458,7 @@ const EncryptionView = {
                 <CopyButton v-if="desResult" :text="desResult"></CopyButton>
             </div>
             <textarea v-model="desResult" readonly :placeholder="desResultPlaceholder"
-                class="rounded-xl flex-1 border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                class="rounded flex-1 border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
         </div>
     </div>
 
@@ -468,12 +468,12 @@ const EncryptionView = {
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
                 <input type="text" v-model="tripleDesKey" placeholder="输入3DES密钥"
-                    class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                    class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
             <div v-if="tripleDesMode !== 'ECB'">
                 <label class="block text-sm font-medium text-gray-700 mb-1">IV（必需）</label>
                 <input type="text" v-model="tripleDesIv" placeholder="输入IV"
-                    class="rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                    class="rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">模式</label>
@@ -486,7 +486,7 @@ const EncryptionView = {
             <div class="flex-1 flex flex-col gap-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
                 <textarea v-model="tripleDesInput" placeholder="输入明文或密文..."
-                    class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
             <div class="flex space-x-2">
                 <Button @click="tripleDesEncrypt" variant="primary" size="sm">加密</Button>
@@ -499,7 +499,7 @@ const EncryptionView = {
                 <CopyButton v-if="tripleDesResult" :text="tripleDesResult"></CopyButton>
             </div>
             <textarea v-model="tripleDesResult" readonly :placeholder="tripleDesResultPlaceholder"
-                class="rounded-xl flex-1 border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                class="rounded flex-1 border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
         </div>
     </div>
     `,

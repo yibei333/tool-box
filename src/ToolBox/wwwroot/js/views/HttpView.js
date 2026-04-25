@@ -9,7 +9,7 @@ const HttpView = {
         <div class="flex flex-col lg:flex-row lg:items-center gap-2">
             <SingleSelect v-model="method" :options="methods.map(m => ({ value: m, label: m }))" size="md"></SingleSelect>
             <input type="text" v-model="url" placeholder="https://example.com/api"
-                class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             <Button @click="send" variant="primary" :disabled="loading">{{ loading ? '请求中...' : '发送' }}</Button>
         </div>
 
@@ -22,9 +22,9 @@ const HttpView = {
             </div>
             <div v-for="(h, i) in headers" :key="i" class="flex gap-1 mb-2">
                 <input type="text" v-model="h.key" placeholder="键"
-                    class="flex-1 min-w-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                    class="flex-1 min-w-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
                 <input type="text" v-model="h.value" placeholder="值"
-                    class="flex-1 min-w-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                    class="flex-1 min-w-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
                 <Button @click="removeHeader(i)" variant="ghost" size="sm" icon>
                     <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </Button>
@@ -42,9 +42,9 @@ const HttpView = {
                     <SingleSelect v-if="contentType === 'multipart/form-data'" v-model="f.type"
                         :options="[{value:'text',label:'文本'},{value:'file',label:'文件'}]"></SingleSelect>
                     <input type="text" v-model="f.key" placeholder="字段名"
-                        class="flex-1 min-w-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                        class="flex-1 min-w-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
                     <input v-if="f.type === 'text' || contentType === 'application/x-www-form-urlencoded'" type="text" v-model="f.value" placeholder="字段值"
-                        class="flex-1 min-w-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                        class="flex-1 min-w-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
                     <input v-else type="file" :ref="el => { if (el) f.fileRef = el }"
                         class="flex-1 min-w-1 text-xs self-center"
                         @change="f.fileName = f.fileRef.files[0]?.name || ''">
@@ -56,12 +56,12 @@ const HttpView = {
                 <Button @click="addFormField" variant="ghost" size="sm">+ 添加字段</Button>
             </div>
             <textarea v-else v-model="body"  placeholder="请求体内容..."
-                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
         </div>
 
         <div v-if="response" class="flex-1 flex flex-col space-y-4 border-t border-gray-200 pt-4">
             <div class="flex items-center space-x-4">
-                <span :class="['px-3 py-1 rounded-lg text-sm font-bold', response.statusCode < 300 ? 'bg-green-100 text-green-700' : response.statusCode < 400 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700']">
+                <span :class="['px-3 py-1 rounded text-sm font-bold', response.statusCode < 300 ? 'bg-green-100 text-green-700' : response.statusCode < 400 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700']">
                     {{ response.statusCode }} {{ response.statusText }}
                 </span>
                 <span class="text-sm text-gray-500">{{ response.duration }}ms</span>
@@ -69,7 +69,7 @@ const HttpView = {
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">响应头</label>
-                <div class="bg-gray-50 rounded-xl px-4 py-2.5 text-xs mono">
+                <div class="bg-gray-50 rounded px-4 py-2.5 text-xs mono">
                     <div v-for="(v, k) in response.headers" :key="k">
                         <span class="text-gray-500">{{ k }}:</span> <span class="text-gray-700">{{ v }}</span>
                     </div>
@@ -86,8 +86,8 @@ const HttpView = {
                     </div>
                 </div>
                 <textarea v-if="responseView === 'raw'" v-model="response.body" readonly
-                    class="w-full flex-1 min-h-50 rounded-xl border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
-                <iframe v-else v-bind:srcdoc="response.body" class="flex-1 w-full min-h-50 rounded-xl border border-gray-300 bg-white" style="height: 300px;"></iframe>
+                    class="w-full flex-1 min-h-50 rounded border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
+                <iframe v-else v-bind:srcdoc="response.body" class="flex-1 w-full min-h-50 rounded border border-gray-300 bg-white" style="height: 300px;"></iframe>
             </div>
         </div>
     </div>

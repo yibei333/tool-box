@@ -8,7 +8,7 @@ const EncodingView = {
     <!-- Desktop tabs -->
     <div class="hidden lg:flex mb-2 border-b border-gray-200 pb-2">
         <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
-            :class="['px-4 py-2 text-sm rounded-t-lg',
+            :class="['px-4 py-2 text-sm rounded',
                      activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
             {{ tab.label }}
         </button>
@@ -24,7 +24,7 @@ const EncodingView = {
             <div class="flex-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
                 <textarea v-model="currentInput" :placeholder="inputPlaceholder"
-                    class="min-h-50 w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                    class="min-h-50 w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
             <div class="flex space-x-2">
                 <Button @click="encode" variant="primary" size="sm">{{ encodeLabel }}</Button>
@@ -38,7 +38,7 @@ const EncodingView = {
                 <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
             </div>
             <textarea v-model="currentOutput"  readonly :placeholder="outputPlaceholder"
-                class="min-h-50 w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                class="min-h-50 w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
         </div>
     </div>
     `,

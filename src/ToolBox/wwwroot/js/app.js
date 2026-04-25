@@ -22,12 +22,12 @@ const App = {
         <header class="block lg:hidden glass border-b border-gray-200 sticky top-0 z-50">
             <div class="flex items-center justify-between p-2">
                 <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-700 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded bg-indigo-700 flex items-center justify-center">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
                     <span class="text-lg font-bold gradient-text">ToolBox</span>
                 </div>
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-lg hover:bg-gray-100">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded hover:bg-gray-100">
                     <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path v-if="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -42,12 +42,12 @@ const App = {
                 <div class="p-4 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 rounded-lg bg-indigo-700 flex items-center justify-center">
+                            <div class="w-8 h-8 rounded bg-indigo-700 flex items-center justify-center">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             </div>
                             <span class="text-lg font-bold gradient-text">ToolBox</span>
                         </div>
-                        <button @click="mobileMenuOpen = false" class="p-2 rounded-lg hover:bg-gray-100">
+                        <button @click="mobileMenuOpen = false" class="p-2 rounded hover:bg-gray-100">
                             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
@@ -55,7 +55,7 @@ const App = {
                 <nav class="flex-1 p-2 overflow-y-auto">
                     <a v-for="item in navItems" :key="item.route"
                        @click="navigate(item.route); mobileMenuOpen = false;"
-                       :class="['flex items-center space-x-3 px-3 py-2.5 rounded-xl',
+                       :class="['flex items-center space-x-3 px-3 py-2.5 rounded',
                                 currentRoute === item.route
                                   ? 'bg-indigo-700/10 text-indigo-700 font-medium border-l-3 border-indigo-700'
                                   : 'text-gray-600 hover:bg-gray-100']">
@@ -68,10 +68,10 @@ const App = {
 
         <!-- Desktop sidebar -->
         <aside class="hidden lg:flex flex-col h-screen overflow-hidden p-8 pr-0">
-            <div class="w-60 glass border-r border-gray-200 overlow-y-auto rounded-2xl flex-1 flex flex-col">
+            <div class="w-60 glass border-r border-gray-200 overlow-y-auto rounded flex-1 flex flex-col">
                 <div class="p-4 border-b border-gray-200">
                     <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 rounded-lg bg-indigo-700 flex items-center justify-center">
+                        <div class="w-8 h-8 rounded bg-indigo-700 flex items-center justify-center">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </div>
                         <span class="text-lg font-bold gradient-text">ToolBox</span>
@@ -80,7 +80,7 @@ const App = {
                 <nav class="flex-1 p-2 overflow-y-auto">
                     <a v-for="item in navItems" :key="item.route"
                     @click="navigate(item.route)"
-                    :class="['flex items-center space-x-3 px-3 py-2.5 rounded-xl',
+                    :class="['flex items-center space-x-3 px-3 py-2.5 rounded',
                                 currentRoute === item.route
                                 ? 'bg-indigo-700/10 text-indigo-700 font-medium border-l-3 border-indigo-700'
                                 : 'text-gray-600 hover:bg-gray-100']">
@@ -93,7 +93,7 @@ const App = {
 
         <!-- Main content -->
         <main class="flex-1 p-4 lg:p-8 flex flex-col overflow-hidden">
-            <div class="flex-1 glass rounded-2xl p-6 shadow-xl flex flex-col overflow-y-auto">
+            <div class="flex-1 glass rounded p-6 shadow-xl flex flex-col overflow-y-auto">
                 <router-view v-slot="{ Component }">
                     <keep-alive>
                         <component :is="Component" />

@@ -8,7 +8,7 @@ const StringView = {
     <!-- Desktop tabs -->
     <div class="hidden lg:flex space-x-2 mb-2 border-b border-gray-200 pb-3">
         <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
-            :class="['px-4 py-2 text-sm rounded-t-lg', activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
+            :class="['px-4 py-2 text-sm rounded', activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
             {{ tab.label }}
         </button>
     </div>
@@ -24,12 +24,12 @@ const StringView = {
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">文本1</label>
                 <textarea v-model="diffText1" rows="10" placeholder="输入文本1..."
-                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                    class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">文本2</label>
                 <textarea v-model="diffText2" rows="10" placeholder="输入文本2..."
-                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                    class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
             </div>
         </div>
         <Button @click="computeDiff" variant="primary" size="sm">比较</Button>
@@ -48,7 +48,7 @@ const StringView = {
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">输入文本</label>
             <textarea v-model="escapeInput" rows="6" placeholder="输入文本..."
-                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
         </div>
         <div class="flex space-x-2">
             <Button @click="doEscape" variant="primary" size="sm">转义</Button>
@@ -60,7 +60,7 @@ const StringView = {
                 <CopyButton :text="escapeResult"></CopyButton>
             </div>
             <textarea v-model="escapeResult" rows="6" readonly
-                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
         </div>
     </div>
 
@@ -69,7 +69,7 @@ const StringView = {
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">输入文本</label>
             <textarea v-model="caseInput" rows="4" placeholder="输入文本..."
-                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
         </div>
         <div class="flex flex-wrap gap-2">
             <Button v-for="ct in caseTypes" :key="ct.value" @click="convertCase(ct.value)" variant="secondary" size="sm">{{ ct.label }}</Button>
@@ -80,7 +80,7 @@ const StringView = {
                 <CopyButton :text="caseResult"></CopyButton>
             </div>
             <textarea v-model="caseResult" rows="4" readonly
-                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
         </div>
     </div>
 
@@ -95,12 +95,12 @@ const StringView = {
             <div class="flex gap-2 items-center">
                 <label class="block text-sm text-gray-700 mb-1">长度</label>
                 <input type="number" v-model.number="randomLength" min="1" max="256"
-                    class="w-24 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
+                    class="w-24 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
             </div>
             <Button @click="generateRandom" variant="primary" size="sm">生成</Button>
         </div>
         <div v-if="randomResult">
-            <div class="flex items-center space-x-2 bg-gray-50 rounded-xl px-4 py-2.5">
+            <div class="flex items-center space-x-2 bg-gray-50 rounded px-4 py-2.5">
                 <code class="mono text-sm flex-1 select-all">{{ randomResult }}</code>
                 <CopyButton :text="randomResult"></CopyButton>
             </div>

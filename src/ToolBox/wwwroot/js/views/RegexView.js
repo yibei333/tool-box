@@ -10,7 +10,7 @@ const RegexView = {
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">正则表达式</label>
                 <input type="text" v-model="pattern" placeholder="输入正则表达式..."
-                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                    class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
             </div>
 
             <div class="flex items-center space-x-4">
@@ -27,20 +27,20 @@ const RegexView = {
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">测试文本</label>
                 <textarea v-model="text" rows="6" placeholder="输入测试文本..."
-                    class="w-full rounded-xl border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                    class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
             </div>
 
             <Button @click="test" variant="primary">测试</Button>
 
             <div v-if="result">
-                <div v-if="!result.isValid" class="bg-red-50 text-red-700 px-4 py-3 rounded-xl text-sm">
+                <div v-if="!result.isValid" class="bg-red-50 text-red-700 px-4 py-3 rounded text-sm">
                     无效的正则表达式: {{ result.error }}
                 </div>
                 <div v-else class="space-y-3">
-                    <div class="bg-green-50 text-green-700 px-4 py-2 rounded-xl text-sm">
+                    <div class="bg-green-50 text-green-700 px-4 py-2 rounded text-sm">
                         找到 {{ result.matches.length }} 个匹配
                     </div>
-                    <div v-for="(m, i) in result.matches" :key="i" class="bg-gray-50 rounded-xl px-4 py-2">
+                    <div v-for="(m, i) in result.matches" :key="i" class="bg-gray-50 rounded px-4 py-2">
                         <div class="text-sm text-gray-600">匹配 {{ i + 1 }}: 索引 {{ m.index }}, 长度 {{ m.length }}</div>
                         <code class="mono text-sm text-indigo-700">{{ m.value }}</code>
                         <div v-if="m.groups.length" class="mt-1">
@@ -58,7 +58,7 @@ const RegexView = {
             <div class="space-y-2 overflow-y-auto">
                 <div v-for="p in patterns" :key="p.name"
                     @click="usePattern(p)"
-                    class="bg-gray-50 rounded-xl px-3 py-2 cursor-pointer hover:bg-indigo-50">
+                    class="bg-gray-50 rounded px-3 py-2 cursor-pointer hover:bg-indigo-50">
                     <div class="text-sm font-medium text-gray-700">{{ p.name }}</div>
                     <div class="text-xs text-gray-500 truncate">{{ p.description }}</div>
                 </div>

@@ -9,7 +9,7 @@ const TimestampView = {
         <div class="space-y-4">
             <label class="block text-sm font-medium text-gray-700">日期时间</label>
             <input type="datetime-local" v-model="datetime"
-                class=" rounded-xl border border-gray-300 px-4 py-2.5 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
+                class=" rounded border border-gray-300 px-4 py-2.5 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
             <Button @click="toUnix" variant="primary">转为时间戳</Button>
             <div v-if="unixResult" class="space-y-2">
                 <div class="flex items-center space-x-2">
@@ -40,7 +40,7 @@ const TimestampView = {
                 </div>
             </div>
             <input type="text" v-model="timestamp" placeholder="输入时间戳（秒或毫秒）"
-                class=" rounded-xl border border-gray-300 px-4 py-2.5 mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
+                class=" rounded border border-gray-300 px-4 py-2.5 mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
             <Button @click="toDatetime" variant="primary">转为日期时间</Button>
             <div v-if="datetimeResult" class="space-y-2">
                 <div class="flex items-center space-x-2">

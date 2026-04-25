@@ -52,7 +52,7 @@ const SingleSelect = {
         <div class="relative" @click.stop>
             <div @click="toggle"
                 :class="[
-                    'w-full rounded-xl border bg-white flex items-center justify-between cursor-pointer',
+                    'w-full rounded border bg-white flex items-center justify-between cursor-pointer',
                     size === 'sm' ? 'px-2 py-1.5 text-xs' : size === 'lg' ? 'px-4 py-2.5 text-base' : 'px-3 py-2 text-sm',
                     isOpen ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-300 hover:border-gray-400'
                 ]">
@@ -64,7 +64,7 @@ const SingleSelect = {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
             </div>
-                <div v-if="isOpen" class="absolute z-50 mt-1 w-full rounded-xl bg-white shadow-lg border border-gray-200 py-1 overflow-hidden">
+                <div v-if="isOpen" class="absolute z-50 mt-1 w-full rounded bg-white shadow-lg border border-gray-200 py-1 overflow-hidden">
                 <div
                     v-for="opt in options" 
                     :key="opt.value"
