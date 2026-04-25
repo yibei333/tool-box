@@ -1,12 +1,12 @@
 const EncodingView = {
     template: `
-    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+    <h2 class="text-xl font-bold text-gray-800 mb-1 flex items-center space-x-1">
         <span class="text-indigo-700">🔠</span>
         <span>编码转换</span>
     </h2>
 
     <!-- Desktop tabs -->
-    <div class="hidden lg:flex mb-2 border-b border-gray-200 pb-2">
+    <div class="hidden lg:flex mb-1 border-b border-gray-200 pb-2">
         <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
             :class="['px-4 py-2 text-sm rounded',
                      activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
@@ -14,19 +14,19 @@ const EncodingView = {
         </button>
     </div>
     <!-- Mobile dropdown -->
-    <div class="lg:hidden mb-2">
-        <label class="block text-sm font-medium text-gray-700 mb-2">选择编码类型</label>
+    <div class="lg:hidden mb-1">
+        <label class="block text-sm font-medium text-gray-700 mb-1">选择编码类型</label>
         <SingleSelect v-model="activeTab" :options="tabs.map(t => ({ value: t.key, label: t.label }))" size="md"></SingleSelect>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
         <div class="flex flex-col">
             <div class="flex-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1">输入</label>
                 <textarea v-model="currentInput" :placeholder="inputPlaceholder"
-                    class="min-h-50 w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                    class="min-h-50 w-full rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
-            <div class="flex space-x-2">
+            <div class="flex space-x-1">
                 <Button @click="encode" variant="primary" size="sm">{{ encodeLabel }}</Button>
                 <Button @click="decode" variant="secondary" size="sm">{{ decodeLabel }}</Button>
             </div>
@@ -38,7 +38,7 @@ const EncodingView = {
                 <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
             </div>
             <textarea v-model="currentOutput"  readonly :placeholder="outputPlaceholder"
-                class="min-h-50 w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
+                class="min-h-50 w-full rounded border border-gray-300 px-3 py-2 mono text-sm bg-gray-50 outline-none resize-none"></textarea>
         </div>
     </div>
     `,

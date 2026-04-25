@@ -1,35 +1,35 @@
 const StringView = {
     template: `
-    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+    <h2 class="text-xl font-bold text-gray-800 mb-1 flex items-center space-x-1">
         <span class="text-indigo-700">📝</span>
         <span>字符串工具</span>
     </h2>
 
     <!-- Desktop tabs -->
-    <div class="hidden lg:flex space-x-2 mb-2 border-b border-gray-200 pb-3">
+    <div class="hidden lg:flex space-x-1 mb-1 border-b border-gray-200 pb-3">
         <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
             :class="['px-4 py-2 text-sm rounded', activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
             {{ tab.label }}
         </button>
     </div>
     <!-- Mobile dropdown -->
-    <div class="lg:hidden mb-2">
-        <label class="block text-sm font-medium text-gray-700 mb-2">选择操作</label>
+    <div class="lg:hidden mb-1">
+        <label class="block text-sm font-medium text-gray-700 mb-1">选择操作</label>
         <SingleSelect v-model="activeTab" :options="tabs.map(t => ({ value: t.key, label: t.label }))" size="md"></SingleSelect>
     </div>
 
     <!-- Diff -->
-    <div v-if="activeTab === 'diff'" class="space-y-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div v-if="activeTab === 'diff'" class="space-y-1">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">文本1</label>
                 <textarea v-model="diffText1" rows="10" placeholder="输入文本1..."
-                    class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                    class="w-full rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">文本2</label>
                 <textarea v-model="diffText2" rows="10" placeholder="输入文本2..."
-                    class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                    class="w-full rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
             </div>
         </div>
         <Button @click="computeDiff" variant="primary" size="sm">比较</Button>
@@ -44,13 +44,13 @@ const StringView = {
     </div>
 
     <!-- Escape/Unescape -->
-    <div v-if="activeTab === 'escape'" class="space-y-4">
+    <div v-if="activeTab === 'escape'" class="space-y-1">
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">输入文本</label>
             <textarea v-model="escapeInput" rows="6" placeholder="输入文本..."
-                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
         </div>
-        <div class="flex space-x-2">
+        <div class="flex space-x-1">
             <Button @click="doEscape" variant="primary" size="sm">转义</Button>
             <Button @click="doUnescape" variant="secondary" size="sm">去除转义</Button>
         </div>
@@ -60,18 +60,18 @@ const StringView = {
                 <CopyButton :text="escapeResult"></CopyButton>
             </div>
             <textarea v-model="escapeResult" rows="6" readonly
-                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-3 py-2 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
         </div>
     </div>
 
     <!-- Case Conversion -->
-    <div v-if="activeTab === 'case'" class="space-y-4">
+    <div v-if="activeTab === 'case'" class="space-y-1">
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">输入文本</label>
             <textarea v-model="caseInput" rows="4" placeholder="输入文本..."
-                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
         </div>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-1">
             <Button v-for="ct in caseTypes" :key="ct.value" @click="convertCase(ct.value)" variant="secondary" size="sm">{{ ct.label }}</Button>
         </div>
         <div v-if="caseResult">
@@ -80,19 +80,19 @@ const StringView = {
                 <CopyButton :text="caseResult"></CopyButton>
             </div>
             <textarea v-model="caseResult" rows="4" readonly
-                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-3 py-2 mono text-sm bg-gray-50 outline-none resize-y"></textarea>
         </div>
     </div>
 
     <!-- Random String -->
-    <div v-if="activeTab === 'random'" class="space-y-4">
-        <div class="flex flex-col items-start lg:flex-row lg:items-center gap-2">
-            <div class="flex gap-2 items-center">
+    <div v-if="activeTab === 'random'" class="space-y-1">
+        <div class="flex flex-col items-start lg:flex-row lg:items-center gap-1">
+            <div class="flex gap-1 items-center">
                 <label class="block text-sm text-gray-700 mb-1">字符集</label>
                 <SingleSelect v-model="randomCharSet"
                     :options="[{value:'number',label:'纯数字'},{value:'letter_lower',label:'小写字母'},{value:'letter_upper',label:'大写字母'},{value:'letter',label:'字母'},{value:'number_and_letter',label:'数字+字母'},{value:'mix',label:'混合(含特殊字符)'}]" size="md"></SingleSelect>
             </div>
-            <div class="flex gap-2 items-center">
+            <div class="flex gap-1 items-center">
                 <label class="block text-sm text-gray-700 mb-1">长度</label>
                 <input type="number" v-model.number="randomLength" min="1" max="256"
                     class="w-24 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
@@ -100,7 +100,7 @@ const StringView = {
             <Button @click="generateRandom" variant="primary" size="sm">生成</Button>
         </div>
         <div v-if="randomResult">
-            <div class="flex items-center space-x-2 bg-gray-50 rounded px-4 py-2.5">
+            <div class="flex items-center space-x-1 bg-gray-50 rounded px-3 py-2">
                 <code class="mono text-sm flex-1 select-all">{{ randomResult }}</code>
                 <CopyButton :text="randomResult"></CopyButton>
             </div>

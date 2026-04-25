@@ -1,26 +1,26 @@
 const HttpView = {
     template: `
-    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+    <h2 class="text-xl font-bold text-gray-800 mb-1 flex items-center space-x-1">
         <span class="text-indigo-700">🌐</span>
         <span>HTTP模拟器</span>
     </h2>
 
-    <div class="flex-1 flex flex-col gap-2">
-        <div class="flex flex-col lg:flex-row lg:items-center gap-2">
+    <div class="flex-1 flex flex-col gap-1">
+        <div class="flex flex-col lg:flex-row lg:items-center gap-1">
             <SingleSelect v-model="method" :options="methods.map(m => ({ value: m, label: m }))" size="md"></SingleSelect>
             <input type="text" v-model="url" placeholder="https://example.com/api"
-                class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none">
+                class="flex-1 rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none">
             <Button @click="send" variant="primary" :disabled="loading">{{ loading ? '请求中...' : '发送' }}</Button>
         </div>
 
         <div>
-            <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center justify-between mb-1">
                 <label class="text-sm font-medium text-gray-700">请求头</label>
                 <Button @click="addHeader" variant="ghost" size="sm" icon>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </Button>
             </div>
-            <div v-for="(h, i) in headers" :key="i" class="flex gap-1 mb-2">
+            <div v-for="(h, i) in headers" :key="i" class="flex gap-1 mb-1">
                 <input type="text" v-model="h.key" placeholder="键"
                     class="flex-1 min-w-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
                 <input type="text" v-model="h.value" placeholder="值"
@@ -32,13 +32,13 @@ const HttpView = {
         </div>
 
         <div v-if="method !== 'GET'">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:space-y-0 lg:space-x-4 mb-2">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:space-y-0 lg:space-x-1 mb-1">
                 <label class="text-sm font-medium text-gray-700">请求体</label>
                 <SingleSelect v-model="contentType"
                     :options="[{value:'application/json',label:'application/json'},{value:'application/x-www-form-urlencoded',label:'application/x-www-form-urlencoded'},{value:'multipart/form-data',label:'multipart/form-data'},{value:'text/plain',label:'text/plain'},{value:'text/xml',label:'text/xml'}]"></SingleSelect>
             </div>
             <div v-if="contentType === 'multipart/form-data' || contentType === 'application/x-www-form-urlencoded'">
-                <div v-for="(f, i) in formFields" :key="i" class="flex gap-1 mb-2">
+                <div v-for="(f, i) in formFields" :key="i" class="flex gap-1 mb-1">
                     <SingleSelect v-if="contentType === 'multipart/form-data'" v-model="f.type"
                         :options="[{value:'text',label:'文本'},{value:'file',label:'文件'}]"></SingleSelect>
                     <input type="text" v-model="f.key" placeholder="字段名"
@@ -56,11 +56,11 @@ const HttpView = {
                 <Button @click="addFormField" variant="ghost" size="sm">+ 添加字段</Button>
             </div>
             <textarea v-else v-model="body"  placeholder="请求体内容..."
-                class="w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                class="w-full rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
         </div>
 
-        <div v-if="response" class="flex-1 flex flex-col space-y-4 border-t border-gray-200 pt-4">
-            <div class="flex items-center space-x-4">
+        <div v-if="response" class="flex-1 flex flex-col space-y-1 border-t border-gray-200 pt-4">
+            <div class="flex items-center space-x-1">
                 <span :class="['px-3 py-1 rounded text-sm font-bold', response.statusCode < 300 ? 'bg-green-100 text-green-700' : response.statusCode < 400 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700']">
                     {{ response.statusCode }} {{ response.statusText }}
                 </span>
@@ -69,7 +69,7 @@ const HttpView = {
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">响应头</label>
-                <div class="bg-gray-50 rounded px-4 py-2.5 text-xs mono">
+                <div class="bg-gray-50 rounded px-3 py-2 text-xs mono">
                     <div v-for="(v, k) in response.headers" :key="k">
                         <span class="text-gray-500">{{ k }}:</span> <span class="text-gray-700">{{ v }}</span>
                     </div>
@@ -79,14 +79,14 @@ const HttpView = {
             <div class="flex-1 flex flex-col ">
                 <div class="flex items-center justify-between mb-1">
                     <label class="text-sm font-medium text-gray-700">响应体</label>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-1">
                         <button @click="responseView = 'raw'" :class="['px-2 py-1 text-xs rounded', responseView === 'raw' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500']">Raw</button>
                         <button @click="responseView = 'html'" :class="['px-2 py-1 text-xs rounded', responseView === 'html' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500']">HTML</button>
                         <CopyButton :text="response.body"></CopyButton>
                     </div>
                 </div>
                 <textarea v-if="responseView === 'raw'" v-model="response.body" readonly
-                    class="w-full flex-1 min-h-50 rounded border border-gray-300 px-4 py-2.5 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
+                    class="w-full flex-1 min-h-50 rounded border border-gray-300 px-3 py-2 mono text-xs bg-gray-50 outline-none resize-y"></textarea>
                 <iframe v-else v-bind:srcdoc="response.body" class="flex-1 w-full min-h-50 rounded border border-gray-300 bg-white" style="height: 300px;"></iframe>
             </div>
         </div>

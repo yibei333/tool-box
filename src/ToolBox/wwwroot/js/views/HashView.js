@@ -1,21 +1,21 @@
 const HashView = {
     template: `
-    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+    <h2 class="text-xl font-bold text-gray-800 mb-1 flex items-center space-x-1">
         <span class="text-indigo-700">#️⃣</span>
         <span>哈希计算</span>
     </h2>
 
-    <div class="space-y-4">
+    <div class="space-y-1">
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">输入文本</label>
             <textarea v-model="text" placeholder="输入要计算哈希的文本..."
-                class="min-h-50 w-full rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
+                class="min-h-50 w-full rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-y"></textarea>
         </div>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1">
             <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-2">算法</label>
-                <div class="flex flex-wrap gap-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">算法</label>
+                <div class="flex flex-wrap gap-1">
                     <button v-for="algo in algorithms" :key="algo.value" @click="algorithm = algo.value"
                         :class="['px-3 py-1.5 rounded text-sm font-medium transition-colors',
                             algorithm === algo.value ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']">
@@ -26,13 +26,13 @@ const HashView = {
             <div v-if="isHmac" class="flex-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1">密钥</label>
                 <input type="text" v-model="key" placeholder="HMAC密钥"
-                    class=" rounded border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 outline-none">
+                    class=" rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
             </div>
         </div>
 
         <Button @click="compute" variant="primary">计算</Button>
 
-        <div v-if="result" class="flex items-center space-x-2 bg-gray-50 rounded px-4 py-3">
+        <div v-if="result" class="flex items-center space-x-1 bg-gray-50 rounded px-4 py-3">
             <code class="mono text-sm flex-1 break-all select-all">{{ result }}</code>
             <CopyButton :text="result"></CopyButton>
         </div>

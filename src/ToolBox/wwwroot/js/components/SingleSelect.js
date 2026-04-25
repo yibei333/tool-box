@@ -3,7 +3,8 @@ const SingleSelect = {
         modelValue: { type: [String, Number], default: '' },
         options: { type: Array, required: true },
         size: { type: String, default: 'md' },
-        placeholder: { type: String, default: '请选择' }
+        placeholder: { type: String, default: '请选择' },
+        direction: { type: String, default: 'down', validator: v => ['up', 'down'].includes(v) }
     },
     emits: ['update:modelValue'],
     data() {
@@ -30,7 +31,11 @@ const SingleSelect = {
     },
     methods: {
         toggle() {
+            if (SingleSelect._currentOpen && SingleSelect._currentOpen !== this) {
+                SingleSelect._currentOpen.isOpen = false;
+            }
             this.isOpen = !this.isOpen;
+            SingleSelect._currentOpen = this.isOpen ? this : null;
         },
         select(opt) {
             this.$emit('update:modelValue', opt.value);
@@ -39,6 +44,7 @@ const SingleSelect = {
         handleClickOutside(e) {
             if (!this.$el.contains(e.target)) {
                 this.isOpen = false;
+                if (SingleSelect._currentOpen === this) SingleSelect._currentOpen = null;
             }
         }
     },
@@ -49,22 +55,22 @@ const SingleSelect = {
         document.removeEventListener('click', this.handleClickOutside);
     },
     template: `
-        <div class="relative" @click.stop>
+        <div class="relative select-none">
             <div @click="toggle"
                 :class="[
                     'w-full rounded border bg-white flex items-center justify-between cursor-pointer',
-                    size === 'sm' ? 'px-2 py-1.5 text-xs' : size === 'lg' ? 'px-4 py-2.5 text-base' : 'px-3 py-2 text-sm',
+                    size === 'sm' ? 'px-2 py-1.5 text-xs' : size === 'lg' ? 'px-3 py-2 text-base' : 'px-3 py-2 text-sm',
                     isOpen ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-300 hover:border-gray-400'
                 ]">
                 <span :class="[!selectedLabel ? 'text-gray-400' : 'text-gray-800']">
                     {{ selectedLabel || placeholder }}
                 </span>
-                <svg :class="['w-4 h-4 text-gray-400', isOpen ? 'rotate-180' : '']" 
+                <svg :class="['w-4 h-4 text-gray-400 transition-transform', isOpen ? (direction === 'up' ? '' : 'rotate-180') : (direction === 'up' ? 'rotate-180' : '')]" 
                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
             </div>
-                <div v-if="isOpen" class="absolute z-50 mt-1 w-full rounded bg-white shadow-lg border border-gray-200 py-1 overflow-hidden">
+                <div v-if="isOpen" :class="['absolute z-50 w-full rounded bg-white shadow-lg border border-gray-200 py-1 overflow-hidden', direction === 'up' ? 'bottom-full mb-1' : 'top-full mt-1']">
                 <div
                     v-for="opt in options" 
                     :key="opt.value"

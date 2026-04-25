@@ -1,12 +1,12 @@
 const JsonView = {
     template: `
-    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+    <h2 class="text-xl font-bold text-gray-800 mb-1 flex items-center space-x-1">
         <span class="text-indigo-700">📄</span>
         <span>JSON工具</span>
     </h2>
 
     <!-- Desktop tabs -->
-    <div class="hidden lg:flex space-x-2 mb-2 border-b border-gray-200 pb-3">
+    <div class="hidden lg:flex space-x-1 mb-1 border-b border-gray-200 pb-3">
         <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
             :class="['px-4 py-2 text-sm rounded',
                      activeTab === tab.key ? 'bg-indigo-700 text-white' : 'text-gray-600 hover:bg-gray-100']">
@@ -14,20 +14,20 @@ const JsonView = {
         </button>
     </div>
     <!-- Mobile dropdown -->
-    <div class="lg:hidden mb-2">
-        <label class="block text-sm font-medium text-gray-700 mb-2">选择操作</label>
+    <div class="lg:hidden mb-1">
+        <label class="block text-sm font-medium text-gray-700 mb-1">选择操作</label>
         <SingleSelect v-model="activeTab" :options="tabs.map(t => ({ value: t.key, label: t.label }))" size="md"></SingleSelect>
     </div>
 
-    <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="flex flex-col gap-2">
-            <div class="flex-1 flex flex-col gap-2">
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-1">
+        <div class="flex flex-col gap-1">
+            <div class="flex-1 flex flex-col gap-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1">{{ inputLabel }}</label>
                 <textarea v-model="currentInput" :placeholder="inputPlaceholder"
-                    class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
+                    class="flex-1 rounded border border-gray-300 px-3 py-2 mono text-sm focus:border-indigo-500 outline-none resize-none"></textarea>
             </div>
 
-            <div v-if="activeTab === 'to-csharp'" class="flex items-center space-x-2">
+            <div v-if="activeTab === 'to-csharp'" class="flex items-center space-x-1">
                 <label class="text-sm text-gray-700">根类名:</label>
                 <input type="text" v-model="rootName" placeholder="Root"
                     class="w-40 rounded border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 outline-none">
@@ -36,13 +36,13 @@ const JsonView = {
             <Button @click="execute" variant="primary">{{ executeLabel }}</Button>
         </div>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between mb-1">
                 <label class="block text-sm font-medium text-gray-700">结果</label>
                 <CopyButton v-if="currentOutput" :text="currentOutput"></CopyButton>
             </div>
             <textarea v-model="currentOutput" readonly :placeholder="outputPlaceholder"
-                class="flex-1 rounded border border-gray-300 px-4 py-2.5 mono text-sm bg-gray-50 focus:border-indigo-500 outline-none resize-none"></textarea>
+                class="flex-1 rounded border border-gray-300 px-3 py-2 mono text-sm bg-gray-50 focus:border-indigo-500 outline-none resize-none"></textarea>
         </div>
     </div>
     `,
